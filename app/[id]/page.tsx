@@ -21,29 +21,34 @@ interface Question {
   correct_answer_index: number;
 }
 
-export default function Component() {
+export default function Quiz({ params }: { params: { id: string } }) {
   const [question, setQuestion] = useState<Question[]>();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [showScore, setShowScore] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [isStarted, setIsStarted] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const handleAnswerClick = (selectedIndex: number) => {
     setSelectedAnswer(selectedIndex);
   };
 
   const fetchWords = async () => {
+    setIsFetching(true);
     try {
-      const response = await fetch("/api/categories/66d55f5622121618f2d306ba");
+      const response = await fetch(`/api/categories/${params.id}`, {
+        cache: "no-cache",
+      });
       if (!response.ok) throw new Error("Failed to fetch words");
       const data = await response.json();
       console.log(data);
       setQuestion(JSON.parse(data));
+      setIsStarted(true);
     } catch (error) {
       console.error("Error fetching words:", error);
     } finally {
-      setIsStarted(true);
+      setIsFetching(false);
     }
   };
 

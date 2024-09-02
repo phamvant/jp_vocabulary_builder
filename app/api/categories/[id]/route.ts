@@ -19,8 +19,6 @@ export async function GET(
     const data = await collection.findOne({ _id: new ObjectId(id) });
     const result = await main({ str: data!.words });
 
-    // const result = await readFile("test.json", "utf8");
-
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error fetching words:", error);
