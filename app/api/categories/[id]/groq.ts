@@ -13,16 +13,17 @@ async function getGroqChatCompletion({ str }: { str: string[] }) {
     messages: [
       {
         role: "user",
-        content: `create japanese each sentence with this word ${str.toString()} 
-make it quiz by replace that word with blank and give 4 answer
-remember to response in json [{
+        content: `この単語 ${str.toString()} を含む日本語の長い各文を作成します
+その単語を空白に置き換えてクイズを作成し、4 つの回答を与えます
+json で応答することを忘れないでください [{
 "question": "",
-  "options": [
+"options": [
 
-  ],
-  "correct_answer_index": 
+],
+"correct_answer_index":
 }]
-just give me the markdown and don't say anything else`,
+
+難しくして、jsonだけを渡して、他に何も言わないでください。`,
       },
     ],
     model: "llama-3.1-70b-versatile",

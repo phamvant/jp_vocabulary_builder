@@ -174,8 +174,8 @@ export default function JapaneseVocabSaaS() {
                 </SelectTrigger>
                 <SelectContent>
                   {Object.keys(words).map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
+                    <SelectItem key={category} value={category.split(":")[0]}>
+                      {category.split(":")[0]}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -223,44 +223,45 @@ export default function JapaneseVocabSaaS() {
                 key={category.split(":")[1]}
                 className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
-                <a href={`/${category.split(":")[1]}`}>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-lg">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-lg">
+                  <a href={`/${category.split(":")[1]}`}>
                     <CardTitle className="text-xl font-bold">
                       {category.split(":")[0]}
                     </CardTitle>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                  </a>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This will permanently delete the "{category}" category
+                          and all its words.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDeleteCategory(category)}
+                          className="bg-red-500 text-white hover:bg-red-700"
                         >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will permanently delete the "{category}"
-                            category and all its words.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDeleteCategory(category)}
-                            className="bg-red-500 text-white hover:bg-red-700"
-                          >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </CardHeader>
-                </a>
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </CardHeader>
+
                 <CardContent className="pt-4">
                   {wordList && wordList.length > 0 ? (
                     <ul className="space-y-2">

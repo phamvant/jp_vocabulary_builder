@@ -13,6 +13,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import { RefreshCw } from "lucide-react";
 
 // Define the structure of a quiz question
 interface Question {
@@ -40,6 +41,7 @@ export default function Quiz({ params }: { params: { id: string } }) {
       const response = await fetch(`/api/categories/${params.id}`, {
         cache: "no-cache",
       });
+
       if (!response.ok) throw new Error("Failed to fetch words");
       const data = await response.json();
       console.log(data);
@@ -78,7 +80,18 @@ export default function Quiz({ params }: { params: { id: string } }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       {!isStarted || question == undefined ? (
-        <Button onClick={() => fetchWords()}>Test</Button>
+        <Button
+          onClick={() => {
+            fetchWords();
+          }}
+        >
+          Test
+          {isFetching ? (
+            <RefreshCw className=" animate-spin ml-4 size-4" />
+          ) : (
+            ""
+          )}
+        </Button>
       ) : (
         <Card className="w-full max-w-2xl">
           <CardHeader>
