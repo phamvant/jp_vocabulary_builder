@@ -147,30 +147,31 @@ export default function JapaneseVocabSaaS() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 lg:px-60">
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2"></h1>
           <p className="text-xl text-gray-600 dark:text-gray-300"></p>
         </header>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
           <form onSubmit={handleSubmit} className="mb-4">
             <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
               <Input
                 type="text"
                 value={newWord}
                 onChange={(e) => setNewWord(e.target.value)}
-                placeholder="Enter a Japanese word"
-                className="flex-grow text-lg py-6"
+                placeholder="単語を記入"
+                className="flex-grow text-lg py-6 rounded-2xl"
                 // disabled={isLoading}
               />
               <Select
                 value={selectedCategory}
                 onValueChange={setSelectedCategory}
+
                 // disabled={isLoading}
               >
-                <SelectTrigger className="w-full md:w-[180px] text-lg py-6">
-                  <SelectValue placeholder="Select category" />
+                <SelectTrigger className="w-full md:w-[180px] text-lg py-6 rounded-2xl">
+                  <SelectValue placeholder="分類" />
                 </SelectTrigger>
                 <SelectContent>
                   {Object.keys(words).map((category) => (
@@ -183,10 +184,10 @@ export default function JapaneseVocabSaaS() {
               <Button
                 type="submit"
                 // disabled={isLoading}
-                className="w-full md:w-auto"
+                className="w-full md:w-auto py-6 rounded-2xl"
               >
                 <PlusCircle className="w-4 h-4 mr-2" />
-                Add Word
+                単語を追加
               </Button>
             </div>
           </form>
@@ -197,17 +198,17 @@ export default function JapaneseVocabSaaS() {
                 type="text"
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
-                placeholder="Enter a new category"
-                className="flex-grow text-lg py-6"
+                placeholder="分類を記入"
+                className="flex-grow text-lg py-6 rounded-2xl"
                 // disabled={isLoading}
               />
               <Button
                 type="submit"
                 // disabled={isLoading}
-                className="w-full md:w-auto"
+                className="w-full md:w-auto py-6 rounded-2xl"
               >
                 <BookOpen className="w-4 h-4 mr-2" />
-                Add Category
+                分類を追加
               </Button>
             </div>
           </form>
@@ -217,13 +218,13 @@ export default function JapaneseVocabSaaS() {
             <RefreshCw className="animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rounded-2xl">
             {Object.entries(words).map(([category, wordList]) => (
               <Card
                 key={category.split(":")[1]}
                 className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-lg">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-lg rounded-t-2xl">
                   <a href={`/${category.split(":")[1]}`}>
                     <CardTitle className="text-xl font-bold">
                       {category.split(":")[0]}
@@ -268,7 +269,7 @@ export default function JapaneseVocabSaaS() {
                       {wordList.map((word, index) => (
                         <li
                           key={index}
-                          className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-2 rounded-md"
+                          className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-2 rounded-2xl pl-4"
                         >
                           <span className="text-lg">{word}</span>
                           <AlertDialog>
