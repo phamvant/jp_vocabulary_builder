@@ -41,9 +41,10 @@ export default function JapaneseVocabSaaS() {
       if (!response.ok) throw new Error("Failed to fetch words");
       const data = await response.json();
       const wordsObject = data.reduce((acc: any, item: any) => {
-        acc[item.category] = item.words;
+        acc[item.category + ":" + item._id] = item.words;
         return acc;
       }, {});
+      console.log(wordsObject);
       setWords(wordsObject);
     } catch (error) {
       console.error("Error fetching words:", error);
@@ -149,9 +150,7 @@ export default function JapaneseVocabSaaS() {
       <div className="container mx-auto p-4">
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2"></h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300">
-            Japanese Vocabulary Builder
-          </p>
+          <p className="text-xl text-gray-600 dark:text-gray-300"></p>
         </header>
 
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
@@ -221,45 +220,47 @@ export default function JapaneseVocabSaaS() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {Object.entries(words).map(([category, wordList]) => (
               <Card
-                key={category}
+                key={category.split(":")[1]}
                 className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-lg">
-                  <CardTitle className="text-xl font-bold">
-                    {category}
-                  </CardTitle>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This will permanently delete the "{category}" category
-                          and all its words.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDeleteCategory(category)}
-                          className="bg-red-500 text-white hover:bg-red-700"
+                <a href={`/${category.split(":")[1]}`}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-lg">
+                    <CardTitle className="text-xl font-bold">
+                      {category.split(":")[0]}
+                    </CardTitle>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                         >
-                          Delete
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </CardHeader>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will permanently delete the "{category}"
+                            category and all its words.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteCategory(category)}
+                            className="bg-red-500 text-white hover:bg-red-700"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </CardHeader>
+                </a>
                 <CardContent className="pt-4">
                   {wordList && wordList.length > 0 ? (
                     <ul className="space-y-2">
