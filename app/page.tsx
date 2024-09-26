@@ -133,7 +133,7 @@ export default function JapaneseVocabSaaS() {
     });
     try {
       const response = await fetch(
-        `/api/categories?category=${encodeURIComponent(category)}`,
+        `/api/categories?category=${encodeURIComponent(category.split(":")[1])}`,
         {
           method: "DELETE",
         },

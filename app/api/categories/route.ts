@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   if (!category) {
     return NextResponse.json(
       { error: "Category are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -53,7 +53,7 @@ export async function DELETE(request: Request) {
   if (!category) {
     return NextResponse.json(
       { error: "Category is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -68,12 +68,16 @@ export async function DELETE(request: Request) {
     if (word) {
       // Delete a specific word from a category
       result = await collection.updateOne(
-        { category },
-        { $pull: { words: word } }
+        { id_: new ObjectId(category) },
+        { $pull: { words: word } },
       );
     } else {
       // Delete an entire category
-      result = await collection.deleteOne({ category });
+      console.log(category);
+      const result = await collection.deleteOne({
+        _id: new ObjectId(category),
+      }); // Assuming categoryId is a string
+      console.log(result);
     }
 
     return NextResponse.json({ success: true, result });
