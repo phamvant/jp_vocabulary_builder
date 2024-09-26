@@ -32,7 +32,7 @@ export default function Quiz({
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const router = useRouter();
 
-  const fetchWords = async () => {
+  const fetchData = async () => {
     setIsFetching(true);
     try {
       const response = await fetch(
@@ -45,12 +45,20 @@ export default function Quiz({
       if (!response.ok) throw new Error("Failed to fetch words");
       const data = await response.json();
       setQuestion(JSON.parse(data).response.sentences);
-      console.log(JSON.parse(data));
       setIsStarted(true);
+      setIsFetching(false);
+      return true;
     } catch (error) {
       console.error("Error fetching words:", error);
-    } finally {
-      setIsFetching(false);
+      return false;
+    }
+  };
+
+  const fetchWords = async () => {
+    while (1) {
+      if (await fetchData()) {
+        break;
+      }
     }
   };
 
