@@ -2,9 +2,8 @@ import Groq from "groq-sdk";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-export async function main({ str }: { str: string[] }) {
+export async function getSentences({ str }: { str: string[] }) {
   const chatCompletion = await getGroqChatCompletion({ str: str });
-  // Print the completion returned by the LLM.
   return chatCompletion.choices[0]?.message?.content;
 }
 
@@ -13,16 +12,25 @@ async function getGroqChatCompletion({ str }: { str: string[] }) {
     messages: [
       {
         role: "user",
-        content: `${str.toString()} 
-make quiz for me to memorize those words by create an Japanese sentence and replace that word with blank and give 4 answer remember to response in json
-[{
-"question": "",
-  "options": [
+        content: `${str.toString()}
+        その単語を使用した実際の記事や文書からの長い日本語の例文をください。それぞれの文に1つの単語を含めてください。
+        {
+          "response": {
+            "sentences": [
+              {
+                "word": "",
+                "example": "。"
+              },
+              {
+                "word": "",
+                "example": "。"
+              },
+              ...
+            ]
+          }
+        }
 
-  ],
-  "correct_answer_index": 
-}]
-just give me the json and don't say anything else`,
+        JSONを返してください。それ以外のことは言わないでください`,
       },
     ],
     model: "llama3-8b-8192",

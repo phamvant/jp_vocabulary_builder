@@ -112,11 +112,11 @@ export default function JapaneseVocabSaaS() {
     try {
       const response = await fetch(
         `/api/categories?word=${encodeURIComponent(
-          word
+          word,
         )}&category=${encodeURIComponent(category)}`,
         {
           method: "DELETE",
-        }
+        },
       );
       if (!response.ok) throw new Error("Failed to delete word");
     } catch (error) {
@@ -136,7 +136,7 @@ export default function JapaneseVocabSaaS() {
         `/api/categories?category=${encodeURIComponent(category)}`,
         {
           method: "DELETE",
-        }
+        },
       );
       if (!response.ok) throw new Error("Failed to delete category");
     } catch (error) {
@@ -225,7 +225,7 @@ export default function JapaneseVocabSaaS() {
                 className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-lg rounded-t-2xl">
-                  <a href={`/${category.split(":")[1]}`}>
+                  <a href={`/${category.split(":")[1]}/1`}>
                     <CardTitle className="text-xl font-bold">
                       {category.split(":")[0]}
                     </CardTitle>
