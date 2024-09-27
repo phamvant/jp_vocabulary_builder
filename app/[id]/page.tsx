@@ -17,58 +17,43 @@ import { CloudCog, RefreshCw } from "lucide-react";
 import { redirect, useRouter } from "next/navigation";
 
 interface ISentence {
-  word: string;
-  example: string;
+  content: string;
+  mean: string;
 }
 
-export default function Quiz({
-  params,
-}: {
-  params: { id: string; page: number };
-}) {
+export default function Quiz({ params }: { params: { id: string } }) {
   const [question, setQuestion] = useState<ISentence[]>();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [isStarted, setIsStarted] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [isMean, setIsMean] = useState<boolean>(false);
   const router = useRouter();
 
-  const fetchData = async () => {
+  const fetchWords = async () => {
     setIsFetching(true);
     try {
-      const response = await fetch(
-        `/api/categories/${params.id}/${params.page}`,
-        {
-          cache: "no-cache",
-        },
-      );
+      const response = await fetch(`/api/categories/${params.id}`, {
+        cache: "no-cache",
+      });
 
       if (!response.ok) throw new Error("Failed to fetch words");
-      const data = await response.json();
-      setQuestion(JSON.parse(data).response.sentences);
+      const data = (await response.json()).result;
+      setQuestion(data);
       setIsStarted(true);
       setIsFetching(false);
-      return true;
     } catch (error) {
       console.error("Error fetching words:", error);
       return false;
     }
   };
 
-  const fetchWords = async () => {
-    while (1) {
-      if (await fetchData()) {
-        break;
-      }
-    }
-  };
-
   const handleNextQuestion = () => {
     const nextQuestion = currentQuestion + 1;
+
     if (nextQuestion < question!.length) {
       setCurrentQuestion(nextQuestion);
-    } else {
-      router.push(`/${params.id}/${Number(params.page) + 1}`);
     }
+    setIsMean(false);
   };
 
   const handleRepeat = () => {
@@ -91,10 +76,10 @@ export default function Quiz({
           )}
         </Button>
       ) : (
-        <Card className="w-full max-w-2xl">
+        <Card className="w-full max-w-2xl h-2/3">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
-              Japanese Language Quiz
+              日本語能力試験を達成しろ
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -103,11 +88,17 @@ export default function Quiz({
                 value={((currentQuestion + 1) / question.length) * 100}
                 className="w-full mb-4"
               />
-              <h2 className="text-xl font-semibold mb-4 text-center">
-                Sentence {currentQuestion + 1} of {question.length}
-              </h2>
-              <p className="text-lg mb-4 text-center">
-                {question[currentQuestion].example}
+              <p
+                className="text-xl mb-4 text-center py-20  rounded-xl"
+                onClick={() => {
+                  setIsMean((prev) => !prev);
+                }}
+              >
+                {question[currentQuestion]
+                  ? isMean
+                    ? question[currentQuestion].mean
+                    : question[currentQuestion].content
+                  : ""}
               </p>
             </>
           </CardContent>

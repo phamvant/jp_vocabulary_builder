@@ -225,7 +225,7 @@ export default function JapaneseVocabSaaS() {
                 className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-lg rounded-t-2xl">
-                  <a href={`/${category.split(":")[1]}/1`}>
+                  <a href={`/${category.split(":")[1]}`}>
                     <CardTitle className="text-xl font-bold">
                       {category.split(":")[0]}
                     </CardTitle>
@@ -266,7 +266,7 @@ export default function JapaneseVocabSaaS() {
                 <CardContent className="pt-4">
                   {wordList && wordList.length > 0 ? (
                     <ul className="space-y-2">
-                      {wordList.map((word, index) => (
+                      {wordList.slice(0, 3).map((word, index) => (
                         <li
                           key={index}
                           className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-2 rounded-2xl pl-4"
