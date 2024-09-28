@@ -20,6 +20,7 @@ interface ISentence {
   content: string;
   mean: string;
   transcription: string;
+  word: string;
 }
 
 export default function Quiz({ params }: { params: { id: string } }) {
@@ -80,35 +81,42 @@ export default function Quiz({ params }: { params: { id: string } }) {
         <Card className="w-full max-w-2xl h-2/3">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
-              日本語能力試験を達成しろ
+              <div className="flex justify-between items-center">
+                <div className="text-sm text-white">Mazii</div>
+                <p>達成しろ</p>
+                <a
+                  target="_blank"
+                  href={`https://mazii.net/vi-VN/search/word/javi/${question[currentQuestion]?.word ?? "null"}`}
+                  className="text-sm text-blue-600"
+                >
+                  Mazii
+                </a>
+              </div>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <>
               <Progress
                 value={((currentQuestion + 1) / question.length) * 100}
-                className="w-full mb-4"
+                className="w-full "
               />
-              <p
-                className="text-xl mb-4 text-center py-20  rounded-xl"
+              <div
+                className="text-xl text-center py-20  rounded-xl"
                 onClick={() => {
                   setIsMean((prev) => !prev);
                 }}
               >
-                {question[currentQuestion] ? (
-                  isMean ? (
+                {question[currentQuestion] &&
+                  (isMean ? (
                     <div>
-                      <p>{question[currentQuestion].mean}</p>
+                      <p>{question[currentQuestion]?.mean}</p>
                       <br />
-                      <p>{question[currentQuestion].transcription}</p>
+                      <p>{question[currentQuestion]?.transcription}</p>
                     </div>
                   ) : (
-                    question[currentQuestion].content
-                  )
-                ) : (
-                  ""
-                )}
-              </p>
+                    question[currentQuestion]?.content
+                  ))}
+              </div>
             </>
           </CardContent>
           <CardFooter className="flex justify-center gap-10">

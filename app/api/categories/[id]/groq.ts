@@ -21,6 +21,12 @@ export async function getSentences({ str }: { str: string[] }) {
     const sentences = (await ret.json()).results;
 
     const sentence = sentences[Math.floor(Math.random() * sentences.length)];
+
+    console.log(str[i]);
+    if (sentence) {
+      sentence.word = str[i];
+    }
+
     data.push(sentence);
   }
 
