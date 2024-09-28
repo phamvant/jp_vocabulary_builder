@@ -19,6 +19,7 @@ import { redirect, useRouter } from "next/navigation";
 interface ISentence {
   content: string;
   mean: string;
+  transcription: string;
 }
 
 export default function Quiz({ params }: { params: { id: string } }) {
@@ -94,11 +95,19 @@ export default function Quiz({ params }: { params: { id: string } }) {
                   setIsMean((prev) => !prev);
                 }}
               >
-                {question[currentQuestion]
-                  ? isMean
-                    ? question[currentQuestion].mean
-                    : question[currentQuestion].content
-                  : ""}
+                {question[currentQuestion] ? (
+                  isMean ? (
+                    <div>
+                      <p>{question[currentQuestion].mean}</p>
+                      <br />
+                      <p>{question[currentQuestion].transcription}</p>
+                    </div>
+                  ) : (
+                    question[currentQuestion].content
+                  )
+                ) : (
+                  ""
+                )}
               </p>
             </>
           </CardContent>
