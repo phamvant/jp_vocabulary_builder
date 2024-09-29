@@ -35,7 +35,9 @@ export default function Quiz({ params }: { params: { id: string } }) {
     setIsFetching(true);
     try {
       const response = await fetch(`/api/categories/${params.id}`, {
+        method: "GET",
         cache: "no-cache",
+        signal: AbortSignal.timeout(60000),
       });
 
       if (!response.ok) throw new Error("Failed to fetch words");
