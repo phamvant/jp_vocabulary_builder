@@ -30,10 +30,15 @@ export default function JapaneseVocabSaaS() {
   const { data: session } = useSession();
 
   const [words, setWords] = useState<{ [key: string]: string[] }>({});
+  const [listName, setListName] = useState<string[]>([]);
   const [newWord, setNewWord] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setListName(Object.keys(words));
+  }, []);
 
   useEffect(() => {
     fetchWords();
@@ -71,7 +76,10 @@ export default function JapaneseVocabSaaS() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ word: newWord, category: selectedCategory }),
+          body: JSON.stringify({
+            word: newWord,
+            category: selectedCategory.split(":")[0],
+          }),
         });
         if (!response.ok) throw new Error("Failed to save word");
 
@@ -88,12 +96,7 @@ export default function JapaneseVocabSaaS() {
     if (!session) {
       return;
     }
-    if (newCategory && !words.hasOwnProperty(newCategory)) {
-      setWords((prevWords) => ({
-        ...prevWords,
-        [newCategory]: [],
-      }));
-      setNewCategory("");
+    if (newCategory && !listName.includes(newCategory)) {
       try {
         const response = await fetch("/api/categories", {
           method: "POST",
@@ -102,10 +105,19 @@ export default function JapaneseVocabSaaS() {
           },
           body: JSON.stringify({ category: newCategory }),
         });
+
         if (!response.ok) throw new Error("Failed to add category");
+
+        const data = await response.json();
+        const newCategoryId = newCategory + ":" + data.categoryId;
+        setWords((prevWords) => ({
+          [newCategoryId]: [], // Add the new category first
+          ...prevWords, // Spread the previous categories after the new one
+        }));
       } catch (error) {
         console.error("Error adding category:", error);
       } finally {
+        setNewCategory("");
       }
     }
   };
@@ -123,7 +135,7 @@ export default function JapaneseVocabSaaS() {
       const response = await fetch(
         `/api/categories?word=${encodeURIComponent(
           word,
-        )}&category=${encodeURIComponent(category)}`,
+        )}&category=${encodeURIComponent(category.split(":")[1])}`,
         {
           method: "DELETE",
         },
@@ -189,7 +201,7 @@ export default function JapaneseVocabSaaS() {
                 </SelectTrigger>
                 <SelectContent>
                   {Object.keys(words).map((category) => (
-                    <SelectItem key={category} value={category.split(":")[0]}>
+                    <SelectItem key={category} value={category}>
                       {category.split(":")[0]}
                     </SelectItem>
                   ))}
