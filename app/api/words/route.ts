@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { MongoClient } from "mongodb";
-
-const uri = process.env.MONGODB_URL;
+import mongoInstance from "@/app/db/mongo";
 
 export async function POST(request: Request) {
   const { word, category } = await request.json();
@@ -15,35 +13,36 @@ export async function POST(request: Request) {
     );
   }
 
-  const client = new MongoClient(uri ? uri : "");
-
   try {
-    await client.connect();
-    const database = client.db("jp_quiz");
-    const collection = database.collection("words");
+    const db = await mongoInstance.connect();
+    const collection = db.collection("words");
 
-    const result = await collection.updateOne(
+    const result = await collection?.updateOne(
       { category },
       { $addToSet: { words: word } },
       { upsert: true }
     );
-
+    
     return NextResponse.json({ success: true, result });
   } catch (error) {
     console.error("Error saving word:", error);
     return NextResponse.json({ error: "Failed to save word" }, { status: 500 });
-  } finally {
-    await client.close();
-  }
+  } 
 }
 
 export async function GET() {
-  const client = new MongoClient(uri ? uri : "");
-
   try {
-    await client.connect();
-    const database = client.db("jp_quiz");
-    const collection = database.collection("words");
+    const db = await mongoInstance.connect();
+    if(!db) {
+      console.log(db)
+      console.log("No Db instance")
+      return NextResponse.json(
+        { error: "Failed to fetch words" },
+        { status: 500 }
+      );
+    }
+
+    const collection = db.collection("words");
 
     const result = await collection.find().toArray();
 
@@ -54,7 +53,5 @@ export async function GET() {
       { error: "Failed to fetch words" },
       { status: 500 }
     );
-  } finally {
-    await client.close();
   }
 }

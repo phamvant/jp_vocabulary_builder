@@ -1,18 +1,18 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 import { getSentences } from "./groq";
-const uri = process.env.MONGODB_URL;
+import mongoInstance from "@/app/db/mongo";
+
 
 export async function GET(
   request: Request,
   { params }: { params: { id: number } },
 ) {
-  const client = new MongoClient(uri ? uri : "");
 
   try {
-    await client.connect();
-    const database = client.db("jp_quiz");
-    const collection = database.collection("words");
+    const db = await mongoInstance.connect();
+
+    const collection = db.collection("words");
 
     const data = await collection.findOne({ _id: new ObjectId(params.id) });
 
@@ -27,7 +27,5 @@ export async function GET(
       { error: "Failed to fetch words" },
       { status: 500 },
     );
-  } finally {
-    await client.close();
   }
 }

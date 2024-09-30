@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import { MongoClient, ObjectId } from "mongodb";
-import { Collection } from "mongodb";
-
-const uri = process.env.MONGODB_URL;
+import { Collection, ObjectId } from "mongodb";
+import mongoInstance from "@/app/db/mongo";
 
 export async function POST(request: Request) {
   const { category } = await request.json();
@@ -14,14 +12,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const client = new MongoClient(uri ? uri : "");
-
   try {
-    await client.connect();
-    const database = client.db("jp_quiz");
-    const collection = database.collection("words");
+    const db = await mongoInstance.connect();
+    const collection = db.collection("words");
 
-    const exist = await database.collection("words").findOne({
+    const exist = await db.collection("words").findOne({
       category,
     });
 
@@ -29,14 +24,12 @@ export async function POST(request: Request) {
       throw new Error();
     }
 
-    const result = await collection.insertOne({ category });
+    const result = await collection?.insertOne({ category });
 
     return NextResponse.json({ success: true, result });
   } catch (error) {
     console.error("Error saving word:", error);
     return NextResponse.json({ error: "Failed to save word" }, { status: 500 });
-  } finally {
-    await client.close();
   }
 }
 
@@ -50,6 +43,8 @@ export async function DELETE(request: Request) {
   const word = searchParams.get("word");
   const category = searchParams.get("category");
 
+  const db = await mongoInstance.connect();
+
   if (!category) {
     return NextResponse.json(
       { error: "Category is required" },
@@ -57,12 +52,8 @@ export async function DELETE(request: Request) {
     );
   }
 
-  const client = new MongoClient(uri ? uri : "");
-
   try {
-    await client.connect();
-    const database = client.db("jp_quiz");
-    const collection: Collection<Words> = database.collection("words");
+    const collection: Collection<Words> = db.collection("words"); 
 
     let result;
     if (word) {
@@ -84,7 +75,5 @@ export async function DELETE(request: Request) {
   } catch (error) {
     console.error("Error deleting:", error);
     return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
-  } finally {
-    await client.close();
-  }
+  } 
 }

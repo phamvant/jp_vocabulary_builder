@@ -1,50 +1,29 @@
+const getAllData =  (words: string[]) : Promise<any>[] => {
+  return words.map((word) => fetch("https://mazii.net/api/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", 
+      },
+      body: JSON.stringify({
+        dict: "javi",
+        type: "example",
+        query: word,
+      }),
+  }).then(async (res) => {const data = await res.json(); data.word = word; return data}).catch((err) => err))
+}
+
 export async function getSentences({ str }: { str: string[] }) {
-  const data = [];
+  const sentences = await Promise.allSettled(getAllData(str));
 
-  for (let i = 0; i < str.length; i++) {
-    console.log(i);
-    const controller = new AbortController(); // Create an AbortController
-    const timeoutId = setTimeout(() => controller.abort(), 400); // Abort the request after 200ms
-
-    try {
-      const ret = await fetch("https://mazii.net/api/search", {
-        signal: controller.signal, // Use the abort signal
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Specify content type
-        },
-        body: JSON.stringify({
-          dict: "javi",
-          type: "example",
-          query: str[i],
-        }),
-      });
-
-      clearTimeout(timeoutId); // Clear the timeout if the fetch completes on time
-
-      if (!ret.ok) {
-        continue;
-      }
-
-      const sentences = (await ret.json()).results;
-
+  const data = sentences.reduce((acc:any[], cur) => {
+    if(cur.status === "fulfilled" && cur.value && cur.value.results.length) {
+      const sentences = cur.value.results;
       const sentence = sentences[Math.floor(Math.random() * sentences.length)];
+      sentence.word = cur.value.word;
+      acc.push(sentence)
+    } 
+    return acc; 
+   }, [])
 
-      if (sentence) {
-        sentence.word = str[i];
-      }
-
-      data.push(sentence);
-    } catch (e: any) {
-      if (e.name === "AbortError") {
-        console.error(`Request for ${str[i]} timed out`);
-      } else {
-        console.error(`Error fetching sentence for ${str[i]}:`, e);
-      }
-      continue;
-    }
-  }
-
-  console.log(data);
   return data;
 }
