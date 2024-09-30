@@ -1,10 +1,19 @@
 import { NextResponse } from "next/server";
 import mongoInstance from "@/app/db/mongo";
+import { getServerSession } from "next-auth/next";
+import authOptions from "../auth/authOption";
 
 export async function POST(request: Request) {
   const { word, category } = await request.json();
 
-  console.log(word, category);
+  const session = await getServerSession(authOptions);
+
+  if(!session) {
+    return NextResponse.json(
+      { error: "Unauthorized Error" },
+      { status: 401 }
+    );
+  }
 
   if (!category) {
     return NextResponse.json(
@@ -17,12 +26,14 @@ export async function POST(request: Request) {
     const db = await mongoInstance.connect();
     const collection = db.collection("words");
 
-    const result = await collection?.updateOne(
-      { category },
-      { $addToSet: { words: word } },
-      { upsert: true }
+    const result = await collection.updateOne(
+      { category }, // Filter to find the document
+      {
+        $addToSet: { words: word }, // Add the word to the words array
+        $set: { userId: session.user.id } // Set the userId field
+      },
+      { upsert: true } // Create the document if it doesn't exist
     );
-    
     return NextResponse.json({ success: true, result });
   } catch (error) {
     console.error("Error saving word:", error);
@@ -31,6 +42,8 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
+  const session = await getServerSession(authOptions);
+
   try {
     const db = await mongoInstance.connect();
     if(!db) {
@@ -44,7 +57,14 @@ export async function GET() {
 
     const collection = db.collection("words");
 
-    const result = await collection.find().toArray();
+    const result = await collection.find({
+      $or: [
+        { isPublic: true },
+        { userId: session?.user.id }
+      ]
+    })
+    .sort({ userId: session?.user.id ? -1 : 1, isPublic: -1 }) // Sort by userId presence first, then by isPublic
+    .toArray();
 
     return NextResponse.json(result);
   } catch (error) {

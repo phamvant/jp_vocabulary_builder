@@ -14,7 +14,7 @@ const AuthButtons = () => {
         <Button onClick={() => signIn("google")}>Sign In with Google</Button>
       ) : (
         <>
-          <p>Welcome, {session.user.email}</p>
+          <p>こんにちは！ {session.user.name}</p>
           <br />
           <Button onClick={() => signOut()}>Sign Out</Button>
         </>

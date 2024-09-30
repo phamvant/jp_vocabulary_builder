@@ -2,12 +2,15 @@ import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 import { getSentences } from "./groq";
 import mongoInstance from "@/app/db/mongo";
-
+import { getServerSession } from "next-auth/next";
+import authOptions from "../../auth/authOption";
 
 export async function GET(
   request: Request,
   { params }: { params: { id: number } },
 ) {
+
+  const session = await getServerSession(authOptions);
 
   try {
     const db = await mongoInstance.connect();

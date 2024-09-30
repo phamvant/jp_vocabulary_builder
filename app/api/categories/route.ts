@@ -1,9 +1,20 @@
 import { NextResponse } from "next/server";
 import { Collection, ObjectId } from "mongodb";
 import mongoInstance from "@/app/db/mongo";
+import { getServerSession } from "next-auth/next";
+import authOptions from "../auth/authOption";
 
 export async function POST(request: Request) {
   const { category } = await request.json();
+
+  const session = await getServerSession(authOptions);
+
+  if(!session) {
+    return NextResponse.json(
+      { error: "Unauthorized Error" },
+      { status: 401 }
+    );
+  }
 
   if (!category) {
     return NextResponse.json(
@@ -24,7 +35,7 @@ export async function POST(request: Request) {
       throw new Error();
     }
 
-    const result = await collection?.insertOne({ category });
+    const result = await collection?.insertOne({ _id: new ObjectId(), category, userId: session.user.id, isPublic: false });
 
     return NextResponse.json({ success: true, result });
   } catch (error) {
@@ -36,6 +47,7 @@ export async function POST(request: Request) {
 type Words = {
   category: string;
   words: string[];
+  isPublic: boolean;
 };
 
 export async function DELETE(request: Request) {
@@ -56,19 +68,30 @@ export async function DELETE(request: Request) {
     const collection: Collection<Words> = db.collection("words"); 
 
     let result;
+
     if (word) {
       // Delete a specific word from a category
       result = await collection.updateOne(
         { id_: new ObjectId(category) },
-        { $pull: { words: word } },
+        { $pull: { words: word } }
       );
     } else {
-      // Delete an entire category
-      console.log(category);
-      const result = await collection.deleteOne({
-        _id: new ObjectId(category),
-      }); // Assuming categoryId is a string
-      console.log(result);
+      // Delete an entire category if isPublic is not true
+      const categoryDoc = await collection.findOne({ _id: new ObjectId(category) });
+    
+      if (categoryDoc) {
+        if (!categoryDoc.isPublic) {
+          // Proceed with deletion only if isPublic is false
+          result = await collection.deleteOne({
+            _id: new ObjectId(category),
+          });
+          console.log("Category deleted:", result);
+        } else {
+          console.log("Cannot delete category. It is public.");
+        }
+      } else {
+        console.log("Category not found.");
+      }
     }
 
     return NextResponse.json({ success: true, result });
