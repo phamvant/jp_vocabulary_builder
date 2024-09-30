@@ -23,8 +23,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import AuthButtons from "@/components/AuthButton";
+import { useSession } from "next-auth/react";
 
 export default function JapaneseVocabSaaS() {
+
+  const { data: session } = useSession();
+
   const [words, setWords] = useState<{ [key: string]: string[] }>({});
   const [newWord, setNewWord] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -55,6 +60,10 @@ export default function JapaneseVocabSaaS() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if(!session) {
+      return;
+    }
+    e.preventDefault();
     if (newWord && selectedCategory) {
       // Update state directly instead of fetching
       setWords((prevWords) => ({
@@ -81,6 +90,9 @@ export default function JapaneseVocabSaaS() {
 
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
+    if(!session) {
+      return;
+    }
     if (newCategory && !words.hasOwnProperty(newCategory)) {
       setWords((prevWords) => ({
         ...prevWords,
@@ -104,6 +116,9 @@ export default function JapaneseVocabSaaS() {
   };
 
   const handleDeleteWord = async (word: string, category: string) => {
+    if(!session) {
+      return;
+    }
     setWords((prevWords) => ({
       ...prevWords,
       [category]: prevWords[category].filter((w) => w !== word),
@@ -126,6 +141,9 @@ export default function JapaneseVocabSaaS() {
   };
 
   const handleDeleteCategory = async (category: string) => {
+    if(!session) {
+      return;
+    }
     setWords((prevWords) => {
       const newWords = { ...prevWords };
       delete newWords[category];
@@ -144,10 +162,14 @@ export default function JapaneseVocabSaaS() {
     } finally {
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
+      <div className="w-full justify-end flex">
+      </div>
       <div className="container mx-auto p-4 lg:px-60">
+        <AuthButtons />
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2"></h1>
           <p className="text-xl text-gray-600 dark:text-gray-300"></p>
