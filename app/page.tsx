@@ -27,7 +27,6 @@ import AuthButtons from "@/components/AuthButton";
 import { useSession } from "next-auth/react";
 
 export default function JapaneseVocabSaaS() {
-
   const { data: session } = useSession();
 
   const [words, setWords] = useState<{ [key: string]: string[] }>({});
@@ -60,10 +59,6 @@ export default function JapaneseVocabSaaS() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if(!session) {
-      return;
-    }
-    e.preventDefault();
     if (newWord && selectedCategory) {
       // Update state directly instead of fetching
       setWords((prevWords) => ({
@@ -90,7 +85,7 @@ export default function JapaneseVocabSaaS() {
 
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
-    if(!session) {
+    if (!session) {
       return;
     }
     if (newCategory && !words.hasOwnProperty(newCategory)) {
@@ -116,7 +111,7 @@ export default function JapaneseVocabSaaS() {
   };
 
   const handleDeleteWord = async (word: string, category: string) => {
-    if(!session) {
+    if (!session) {
       return;
     }
     setWords((prevWords) => ({
@@ -141,7 +136,7 @@ export default function JapaneseVocabSaaS() {
   };
 
   const handleDeleteCategory = async (category: string) => {
-    if(!session) {
+    if (!session) {
       return;
     }
     setWords((prevWords) => {
@@ -162,12 +157,9 @@ export default function JapaneseVocabSaaS() {
     } finally {
     }
   };
-  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
-      <div className="w-full justify-end flex">
-      </div>
       <div className="container mx-auto p-4 lg:px-60">
         <AuthButtons />
         <header className="mb-8 text-center">
