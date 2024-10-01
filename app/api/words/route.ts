@@ -8,17 +8,14 @@ export async function POST(request: Request) {
 
   const session = await getServerSession(authOptions);
 
-  if(!session) {
-    return NextResponse.json(
-      { error: "Unauthorized Error" },
-      { status: 401 }
-    );
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized Error" }, { status: 401 });
   }
 
   if (!category) {
     return NextResponse.json(
       { error: "Word and category are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -26,19 +23,32 @@ export async function POST(request: Request) {
     const db = await mongoInstance.connect();
     const collection = db.collection("words");
 
+    const existed = await collection.findOne({
+      category,
+      isPublic: true,
+    });
+
+    if (existed) {
+      return NextResponse.json(
+        { error: "Internal Server Error" },
+        { status: 500 },
+      );
+    }
+
     const result = await collection.updateOne(
-      { category }, // Filter to find the document
+      { category, isPublic: false }, // Filter to find the document
       {
         $addToSet: { words: word }, // Add the word to the words array
-        $set: { userId: session.user.id } // Set the userId field
+        $set: { userId: session.user.id }, // Set the userId field
       },
-      { upsert: true } // Create the document if it doesn't exist
+      { upsert: true }, // Create the document if it doesn't exist
     );
+
     return NextResponse.json({ success: true, result });
   } catch (error) {
     console.error("Error saving word:", error);
     return NextResponse.json({ error: "Failed to save word" }, { status: 500 });
-  } 
+  }
 }
 
 export async function GET() {
@@ -46,32 +56,30 @@ export async function GET() {
 
   try {
     const db = await mongoInstance.connect();
-    if(!db) {
-      console.log(db)
-      console.log("No Db instance")
+    if (!db) {
+      console.log(db);
+      console.log("No Db instance");
       return NextResponse.json(
         { error: "Failed to fetch words" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     const collection = db.collection("words");
 
-    const result = await collection.find({
-      $or: [
-        { isPublic: true },
-        { userId: session?.user.id }
-      ]
-    })
-    .sort({ userId: session?.user.id ? -1 : 1, isPublic: -1 }) // Sort by userId presence first, then by isPublic
-    .toArray();
+    const result = await collection
+      .find({
+        $or: [{ userId: session?.user.id }, { isPublic: true }],
+      })
+      .sort({ userId: session?.user.id ? -1 : 1, isPublic: -1 }) // Sort by userId presence first, then by isPublic
+      .toArray();
 
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error fetching words:", error);
     return NextResponse.json(
       { error: "Failed to fetch words" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

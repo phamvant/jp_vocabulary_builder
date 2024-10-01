@@ -25,9 +25,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import AuthButtons from "@/components/AuthButton";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function JapaneseVocabSaaS() {
   const { data: session } = useSession();
+  const { toast } = useToast();
 
   const [words, setWords] = useState<{ [key: string]: string[] }>({});
   const [listName, setListName] = useState<string[]>([]);
@@ -85,15 +87,27 @@ export default function JapaneseVocabSaaS() {
 
         setNewWord("");
       } catch (error) {
-        console.error("Error saving word:", error);
+        toast({
+          title: "Error add category",
+          description: "Can't add public category",
+        });
       } finally {
       }
+    } else {
+      toast({
+        title: "Error",
+        description: "Fill up form",
+      });
     }
   };
 
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!session) {
+      toast({
+        title: "Unauthenticated",
+        description: "Please login",
+      });
       return;
     }
     if (newCategory && !listName.includes(newCategory)) {
@@ -115,7 +129,6 @@ export default function JapaneseVocabSaaS() {
           ...prevWords, // Spread the previous categories after the new one
         }));
       } catch (error) {
-        console.error("Error adding category:", error);
       } finally {
         setNewCategory("");
       }
@@ -124,6 +137,10 @@ export default function JapaneseVocabSaaS() {
 
   const handleDeleteWord = async (word: string, category: string) => {
     if (!session) {
+      toast({
+        title: "Unauthenticated",
+        description: "Please login",
+      });
       return;
     }
     setWords((prevWords) => ({
@@ -149,6 +166,10 @@ export default function JapaneseVocabSaaS() {
 
   const handleDeleteCategory = async (category: string) => {
     if (!session) {
+      toast({
+        title: "Unauthenticated",
+        description: "Please login",
+      });
       return;
     }
     setWords((prevWords) => {
