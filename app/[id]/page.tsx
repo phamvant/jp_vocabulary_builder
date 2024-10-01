@@ -6,6 +6,7 @@ export default async function Quiz({ params }: { params: { id: string } }) {
       const response = await fetch(
         `${process.env.BASE_URL}/api/categories/${id}`,
         {
+          cache: "no-cache",
           method: "GET",
         },
       );
