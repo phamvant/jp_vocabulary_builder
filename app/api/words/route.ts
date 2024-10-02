@@ -56,14 +56,6 @@ export async function GET() {
 
   try {
     const db = await mongoInstance.connect();
-    if (!db) {
-      console.log(db);
-      console.log("No Db instance");
-      return NextResponse.json(
-        { error: "Failed to fetch words" },
-        { status: 500 },
-      );
-    }
 
     const collection = db.collection("words");
 
@@ -72,14 +64,11 @@ export async function GET() {
         $or: [{ userId: session?.user.id }, { isPublic: true }],
       })
       .sort({ userId: session?.user.id ? -1 : 1, isPublic: -1 }) // Sort by userId presence first, then by isPublic
+      .project({ category: 1 })
       .toArray();
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Error fetching words:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch words" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

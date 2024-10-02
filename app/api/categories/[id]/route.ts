@@ -5,11 +5,7 @@ import mongoInstance from "@/app/db/mongo";
 import { getServerSession } from "next-auth/next";
 import authOptions from "../../auth/authOption";
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: number } },
-) {
-
+export async function GET({ params }: { params: { id: number } }) {
   const session = await getServerSession(authOptions);
 
   try {
@@ -17,7 +13,9 @@ export async function GET(
 
     const collection = db.collection("words");
 
-    const data = await collection.findOne({ _id: new ObjectId(params.id) });
+    const data = await collection.findOne({
+      _id: ObjectId.createFromTime(params.id),
+    });
 
     const chunk = data!.words;
 
