@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,6 +31,10 @@ export default function QuizCard({ words }: { words: any }) {
     }
     setIsMean(false);
   };
+
+  useEffect(() => {
+    console.log(questions);
+  }, []);
 
   const handleRepeat = () => {
     setCurrentQuestion(0);

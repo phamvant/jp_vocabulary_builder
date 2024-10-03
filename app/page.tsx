@@ -43,7 +43,7 @@ export default function JapaneseVocabSaaS() {
 
   const fetchWords = async () => {
     try {
-      const response = await fetch("/api/words");
+      const response = await fetch("/api/categories", { cache: "no-cache" });
       if (!response.ok) throw new Error("Failed to fetch words");
       const data = await response.json();
       setCategories(data);
@@ -80,8 +80,8 @@ export default function JapaneseVocabSaaS() {
         const data = await response.json();
 
         setCategories((prev) => [
-          ...prev,
           { category: newCategory, _id: data._id },
+          ...prev,
         ]);
       } catch (error) {
       } finally {
@@ -160,7 +160,7 @@ export default function JapaneseVocabSaaS() {
                 className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
               >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-lg rounded-t-2xl">
-                  <a href={`/${category._id}`}>
+                  <a href={`category/${category._id}`}>
                     <CardTitle className="text-xl font-bold">
                       {category.category}
                     </CardTitle>

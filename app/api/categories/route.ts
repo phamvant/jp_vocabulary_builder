@@ -63,3 +63,25 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
   }
 }
+
+export async function GET() {
+  const session = await getServerSession(authOptions);
+
+  try {
+    const db = await mongoInstance.connect();
+
+    const collection = db.collection("words");
+
+    const result = await collection
+      .find({
+        $or: [{ userId: session?.user.id }, { isPublic: true }],
+      })
+      .sort({ userId: session?.user.id ? -1 : 1, isPublic: -1 }) // Sort by userId presence first, then by isPublic
+      .project({ category: 1 })
+      .toArray();
+
+    return NextResponse.json(result);
+  } catch (error) {
+    return NextResponse.json({ error: error }, { status: 500 });
+  }
+}
