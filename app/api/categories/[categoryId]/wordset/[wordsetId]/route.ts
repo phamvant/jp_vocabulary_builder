@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import mongoInstance from "@/app/db/mongo";
 import { getServerSession } from "next-auth/next";
 import authOptions from "@/app/api/auth/authOption";
@@ -7,12 +7,13 @@ import { getSentences } from "./mazii";
 import { WordsSchema } from "../route";
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { categoryId: string; wordsetId: string } },
 ) {
   const session = await getServerSession(authOptions);
 
-  console.log(params);
+  const wordonly = request.nextUrl.searchParams.get("wordonly");
+
   try {
     const db = await mongoInstance.connect();
 
@@ -35,11 +36,14 @@ export async function GET(
       return NextResponse.json([]);
     }
 
-    console.log(wordSet);
+    let ret;
+    if (wordonly) {
+      ret = wordSet[0].words;
+    } else {
+      ret = await getSentences({ str: wordSet[0].words });
+    }
 
-    const sentences = await getSentences({ str: wordSet[0].words });
-
-    return NextResponse.json(sentences);
+    return NextResponse.json(ret);
   } catch (error) {
     console.error("Error fetching words:", error);
     return NextResponse.json({ error: error }, { status: 500 });
