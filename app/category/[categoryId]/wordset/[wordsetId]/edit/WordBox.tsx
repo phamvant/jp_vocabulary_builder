@@ -70,13 +70,13 @@ export default function WordBox({ wordSet }: { wordSet: string[] }) {
   return (
     <div className="w-full flex flex-col gap-4 my-10">
       {words.map((str, index) => (
-        <div key={index} className="w-full flex justify-between">
+        <div key={index} className="w-full flex justify-between items-center">
           <Input
             type="text"
             defaultValue={""}
             value={str}
             onChange={(e) => handleChange(index, e.target.value)}
-            className="p-4 w-4/5 shadow-none rounded-2xl focus:outline-none focus:border-slate-300"
+            className="p-6 w-4/5 shadow-none rounded-3xl focus:outline-none focus:border-slate-300 text-base"
           />
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -113,13 +113,13 @@ export default function WordBox({ wordSet }: { wordSet: string[] }) {
       <Button
         onClick={handleAdd}
         variant={"secondary"}
-        className="w-full mt-5 rounded-3xl"
+        className="text-base w-full mt-5 rounded-3xl"
       >
         追加
       </Button>
       <Button
         onClick={handleSave}
-        className="w-full bg-green-600 hover:bg-green-700 rounded-3xl"
+        className="text-base w-full bg-green-600 hover:bg-green-700 rounded-3xl"
       >
         <Save className="mr-2 h-4 w-4" /> 保存
       </Button>
