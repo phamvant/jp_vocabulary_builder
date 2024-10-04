@@ -11,7 +11,7 @@ export default async function Page({
   params: { categoryId: string };
 }) {
   const response = await fetch(
-    `${process.env.BASE_URL}/api/categories/${params.categoryId}/wordset`,
+    `${process.env.BASEURL}/api/categories/${params.categoryId}/wordset`,
     {
       cache: "no-cache",
       method: "GET",

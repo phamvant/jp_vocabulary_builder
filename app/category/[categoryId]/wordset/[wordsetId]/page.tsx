@@ -8,7 +8,7 @@ export default async function Quiz({
   const fetchWords = async () => {
     try {
       const response = await fetch(
-        `${process.env.BASE_URL}/api/categories/${params.categoryId}/wordset/${params.wordsetId}`,
+        `${process.env.BASEURL}/api/categories/${params.categoryId}/wordset/${params.wordsetId}`,
         {
           method: "GET",
           cache: "no-cache",

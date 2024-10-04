@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,6 +24,7 @@ import {
 import { useSharedState } from "./ShareState";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function WordSetRegion({ categoryId }: { categoryId: string }) {
   const { wordSets, setWordSets } = useSharedState();
@@ -48,7 +49,7 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
             "Content-Type": "application/json",
           },
           credentials: "include",
-        },
+        }
       );
 
       if (!response.ok) throw new Error("Failed to delete category");
@@ -73,35 +74,49 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
                 {wordSet.name}
               </CardTitle>
             </a>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
+            <div className="flex gap-6">
+              <a href={`/category/${categoryId}/wordset/${wordSet._id}/edit`} >
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                  className="text-gray-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Pencil className="h-4 w-4" />
                 </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will permanently delete the "{wordSet.name}" category
-                    and all its words.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    className="bg-red-500 text-white hover:bg-red-700"
-                    onClick={() => handleDeleteSet(wordSet._id)}
+              </a>
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                   >
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete the "{wordSet.name}" category
+                      and all its words.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-red-500 text-white hover:bg-red-700"
+                      onClick={() => handleDeleteSet(wordSet._id)}
+                    >
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
           </CardHeader>
           <CardContent className="pt-4">
             {wordSet.words && wordSet.words.length > 0 ? (
