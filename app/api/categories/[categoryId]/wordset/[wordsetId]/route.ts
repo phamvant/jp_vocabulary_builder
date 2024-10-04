@@ -50,8 +50,11 @@ export async function GET(
   }
 }
 
-export async function POST(request: Request) {
-  const { word, category } = await request.json();
+export async function POST(
+  request: Request,
+  { params }: { params: { categoryId: string; wordsetId: string } },
+) {
+  const { newWords } = await request.json();
 
   const session = await getServerSession(authOptions);
 
@@ -59,36 +62,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized Error" }, { status: 401 });
   }
 
-  if (!category) {
-    return NextResponse.json(
-      { error: "Word and category are required" },
-      { status: 400 },
-    );
-  }
-
   try {
     const db = await mongoInstance.connect();
     const collection = db.collection("words");
 
-    const existed = await collection.findOne({
-      category,
-      isPublic: true,
-    });
-
-    if (existed) {
-      return NextResponse.json(
-        { error: "Internal Server Error" },
-        { status: 500 },
-      );
-    }
-
     const result = await collection.updateOne(
-      { category, isPublic: false }, // Filter to find the document
       {
-        $addToSet: { words: word }, // Add the word to the words array
-        $set: { userId: session.user.id }, // Set the userId field
+        isPublic: false,
+        _id: new ObjectId(params.categoryId),
+        userId: session.user.id,
+        "wordSet._id": new ObjectId(params.wordsetId),
+      }, // Filter to find the document
+      {
+        $set: { "wordSet.$.words": newWords },
       },
-      { upsert: true }, // Create the document if it doesn't exist
     );
 
     return NextResponse.json({ success: true, result });

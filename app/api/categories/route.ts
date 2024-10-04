@@ -24,14 +24,26 @@ export async function POST(request: Request) {
     const db = await mongoInstance.connect();
     const collection = db.collection("words");
 
-    const result = collection.insertOne({
+    const result = await collection.insertOne({
       userId: session.user.id,
       category: newCategory,
       isPublic: false,
       wordSet: [],
+      createdDate: new Date(),
     });
 
-    return NextResponse.json({ success: true, result });
+    const newDocument = await collection.findOne(
+      { _id: result.insertedId },
+      { projection: { _id: 1, createdDate: 1 } }, // Project only the fields you need
+    );
+
+    return NextResponse.json({
+      success: true,
+      result: {
+        insertedId: result.insertedId,
+        createdDate: newDocument!.createdDate,
+      },
+    });
   } catch (error) {
     console.error("Error saving word:", error);
     return NextResponse.json({ error: "Failed to save word" }, { status: 500 });
@@ -77,7 +89,7 @@ export async function GET() {
         $or: [{ userId: session?.user.id }, { isPublic: true }],
       })
       .sort({ userId: session?.user.id ? -1 : 1, isPublic: -1 }) // Sort by userId presence first, then by isPublic
-      .project({ category: 1 })
+      .project({ category: 1, createdDate: 1 })
       .toArray();
 
     return NextResponse.json(result);

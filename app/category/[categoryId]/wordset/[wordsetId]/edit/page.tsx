@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import WordBox from "./WordBox";
 
 export default async function EditPage({
@@ -12,6 +13,7 @@ export default async function EditPage({
         {
           method: "GET",
           cache: "no-cache",
+          headers: new Headers(headers()),
         },
       );
 
@@ -28,10 +30,15 @@ export default async function EditPage({
 
   const words = (await fetchWords()) as string[];
 
+  console.log(words);
   return (
-    <div className="w-full px-10">
-      <h1 className="text-2xl font-bold text-center mb-10 mt-10">セット編集</h1>
-      <WordBox wordSet={words} />
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
+      <div className="container mx-auto p-4 lg:px-96">
+        <h1 className="text-2xl font-bold text-center mb-10 mt-10">
+          セット編集
+        </h1>
+        <WordBox wordSet={words} params={params} />
+      </div>
     </div>
   );
 }

@@ -15,10 +15,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
-export default function WordBox({ wordSet }: { wordSet: string[] }) {
+export default function WordBox({
+  wordSet,
+  params,
+}: {
+  wordSet: string[];
+  params: { categoryId: string; wordsetId: string };
+}) {
   const [words, setWords] = useState<string[]>(wordSet);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+  const { toast } = useToast();
 
   const handleChange = (index: number, value: string) => {
     const newStrings = [...words];
@@ -37,35 +45,40 @@ export default function WordBox({ wordSet }: { wordSet: string[] }) {
     setWords([...words, ""]);
   };
 
-  const handleSave = () => {
-    // Here you would typically send the data to a server or perform some other action
-    console.log("Saving words:", words);
-    alert("Changes saved successfully!");
+  const handleSave = async () => {
+    try {
+      const response = await fetch(
+        `/api/categories/${params.categoryId}/wordset/${params.wordsetId}`,
+        {
+          method: "POST",
+          cache: "no-cache",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            newWords: words, // Assuming `words` is a state or variable containing new words
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to save words");
+      }
+
+      // Success: Show a toast notification
+      toast({
+        title: "Words saved successfully!",
+      });
+    } catch (error) {
+      console.error("Error adding words:", error);
+
+      toast({
+        title: "Error adding words",
+      });
+    }
   };
-
-  // const fetchWords = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `/api/categories/${params.categoryId}/wordset/${params.wordsetId}?wordonly=true`,
-  //       {
-  //         method: "GET",
-  //         cache: "no-cache",
-  //       },
-  //     );
-
-  //     if (!response.ok) throw new Error("Failed to fetch words");
-
-  //     const data = await response.json();
-  //     setWords(data.map((val: any) => val.word));
-  //   } catch (error) {
-  //     console.error("Error fetching words:", error);
-  //     return false;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchWords();
-  // }, []);
 
   return (
     <div className="w-full flex flex-col gap-4 my-10">
@@ -73,7 +86,6 @@ export default function WordBox({ wordSet }: { wordSet: string[] }) {
         <div key={index} className="w-full flex justify-between items-center">
           <Input
             type="text"
-            defaultValue={""}
             value={str}
             onChange={(e) => handleChange(index, e.target.value)}
             className="p-6 w-4/5 shadow-none rounded-3xl focus:outline-none focus:border-slate-300 text-base"
@@ -94,16 +106,15 @@ export default function WordBox({ wordSet }: { wordSet: string[] }) {
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the
-                  item.
+                  このワードを削除してよろしいですか？
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel onClick={() => setDeleteIndex(null)}>
-                  Cancel
+                  キャンセル
                 </AlertDialogCancel>
                 <AlertDialogAction onClick={handleDelete}>
-                  Delete
+                  削除
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
