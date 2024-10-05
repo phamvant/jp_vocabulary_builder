@@ -44,7 +44,6 @@ export async function GET(
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error fetching words:", error);
     return NextResponse.json({ error: error }, { status: 500 });
   }
 }
@@ -93,7 +92,6 @@ export async function POST(
 
     return NextResponse.json({ success: true, newSetId });
   } catch (error) {
-    console.error("Error saving word:", error);
     return NextResponse.json({ error: "Failed to save word" }, { status: 500 });
   }
 }

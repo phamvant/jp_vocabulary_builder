@@ -95,7 +95,6 @@ export default function Form({
 
       if (!response.ok) throw new Error("Failed to delete category");
     } catch (error) {
-      console.error("Error deleting category:", error);
     } finally {
     }
   };
@@ -171,7 +170,7 @@ export default function Form({
             </CardHeader>
 
             <CardContent className="pt-4">
-              Created at: {category.createdDate.split("T")[0]}
+              Created at: {category.createdDate?.split("T")[0]}
             </CardContent>
           </Card>
         ))}

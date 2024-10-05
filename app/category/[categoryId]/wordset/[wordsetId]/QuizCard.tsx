@@ -18,23 +18,25 @@ interface ISentence {
   word: string;
 }
 
-export default function QuizCard({ words }: { words: any }) {
+export default function QuizCard({
+  words,
+  name,
+}: {
+  words: ISentence[];
+  name: string;
+}) {
   const [questions, setQuestion] = useState<ISentence[]>(words);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [isMean, setIsMean] = useState<boolean>(false);
 
-  const handleNextQuestion = () => {
-    const nextQuestion = currentQuestion + 1;
+  const handleNextQuestion = (isNext: boolean) => {
+    const nextQuestion = isNext ? currentQuestion + 1 : currentQuestion - 1;
 
-    if (nextQuestion < questions!.length) {
+    if (nextQuestion < questions!.length && nextQuestion >= 0) {
       setCurrentQuestion(nextQuestion);
     }
     setIsMean(false);
   };
-
-  useEffect(() => {
-    console.log(questions);
-  }, []);
 
   const handleRepeat = () => {
     setCurrentQuestion(0);
@@ -47,13 +49,13 @@ export default function QuizCard({ words }: { words: any }) {
           <CardTitle className="text-2xl font-bold text-center">
             <div className="flex justify-between items-center">
               <div className="text-sm text-white">Mazii</div>
-              <p>達成しろ</p>
+              <p>{name}</p>
               <a
                 target="_blank"
                 href={`https://mazii.net/vi-VN/search/word/javi/${questions[currentQuestion]?.word ?? "null"}`}
                 className="text-sm text-blue-600"
               >
-                Mazii
+                辞書へ
               </a>
             </div>
           </CardTitle>
@@ -83,8 +85,15 @@ export default function QuizCard({ words }: { words: any }) {
             </div>
           </>
         </CardContent>
-        <CardFooter className="flex justify-center gap-10">
-          <Button onClick={handleNextQuestion}>次</Button>
+        <CardFooter className="flex justify-center gap-6">
+          <Button
+            className="bg-secondary text-foreground"
+            onClick={() => handleNextQuestion(false)}
+          >
+            前
+          </Button>
+          <Button onClick={() => handleNextQuestion(true)}>次</Button>
+
           {currentQuestion === questions!.length - 1 ? (
             <Button onClick={handleRepeat}>もう一度</Button>
           ) : null}

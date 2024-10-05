@@ -1,5 +1,5 @@
 import AuthButtons from "@/components/AuthButton";
-import Form from "./Form";
+import Form from "@/components/Form";
 import { headers } from "next/headers";
 
 export default async function JapaneseVocabSaaS() {
@@ -11,10 +11,8 @@ export default async function JapaneseVocabSaaS() {
       });
       if (!response.ok) throw new Error("Failed to fetch words");
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (error) {
-      console.error("Error fetching words:", error);
       return [""];
     }
   };

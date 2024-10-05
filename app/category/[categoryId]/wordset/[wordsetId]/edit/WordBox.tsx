@@ -21,20 +21,34 @@ export default function WordBox({
   wordSet,
   params,
 }: {
-  wordSet: string[];
+  wordSet: { name: string; words: string[]; isPublic: boolean };
   params: { categoryId: string; wordsetId: string };
 }) {
-  const [words, setWords] = useState<string[]>(wordSet);
+  const [words, setWords] = useState<string[]>(wordSet.words);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const { toast } = useToast();
 
   const handleChange = (index: number, value: string) => {
+    if (wordSet) {
+      toast({
+        title: "Can't modify public set",
+      });
+      return;
+    }
+
     const newStrings = [...words];
     newStrings[index] = value;
     setWords(newStrings);
   };
 
   const handleDelete = () => {
+    if (wordSet) {
+      toast({
+        title: "Can't modify public set",
+      });
+      return;
+    }
+
     if (deleteIndex !== null) {
       setWords(words.filter((_, i) => i !== deleteIndex));
       setDeleteIndex(null);
@@ -42,10 +56,29 @@ export default function WordBox({
   };
 
   const handleAdd = () => {
+    if (wordSet) {
+      toast({
+        title: "Can't modify public set",
+      });
+      return;
+    }
+    if (wordSet) {
+      toast({
+        title: "Can't modify public set",
+      });
+      return;
+    }
+
     setWords([...words, ""]);
   };
 
   const handleSave = async () => {
+    if (wordSet) {
+      toast({
+        title: "Can't modify public set",
+      });
+      return;
+    }
     try {
       const response = await fetch(
         `/api/categories/${params.categoryId}/wordset/${params.wordsetId}`,
@@ -72,8 +105,6 @@ export default function WordBox({
         title: "Words saved successfully!",
       });
     } catch (error) {
-      console.error("Error adding words:", error);
-
       toast({
         title: "Error adding words",
       });
@@ -104,7 +135,7 @@ export default function WordBox({
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogTitle>確認</AlertDialogTitle>
                 <AlertDialogDescription>
                   このワードを削除してよろしいですか？
                 </AlertDialogDescription>

@@ -21,12 +21,11 @@ export default async function Quiz({
 
       return data;
     } catch (error) {
-      console.error("Error fetching words:", error);
       return false;
     }
   };
 
   const words = await fetchWords();
 
-  return <QuizCard words={words} />;
+  return <QuizCard words={words.wordSet} name={words.name} />;
 }

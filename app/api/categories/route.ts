@@ -45,7 +45,6 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error("Error saving word:", error);
     return NextResponse.json({ error: "Failed to save word" }, { status: 500 });
   }
 }
@@ -71,7 +70,6 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({ success: true, result });
   } catch (error) {
-    console.error("Error deleting:", error);
     return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
   }
 }

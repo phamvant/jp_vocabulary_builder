@@ -1,13 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pencil, Trash2 } from "lucide-react";
 import {
@@ -24,7 +17,6 @@ import {
 import { useSharedState } from "./ShareState";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 
 export default function WordSetRegion({ categoryId }: { categoryId: string }) {
   const { wordSets, setWordSets } = useSharedState();
@@ -49,14 +41,13 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
             "Content-Type": "application/json",
           },
           credentials: "include",
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to delete category");
 
       setWordSets(wordSets.filter((set) => set._id !== wordSetId));
     } catch (error) {
-      console.error("Error deleting category:", error);
     } finally {
     }
   };
@@ -68,19 +59,15 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
           key={wordSet._id}
           className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
         >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-lg rounded-t-2xl">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-2xl">
             <a href={`/category/${categoryId}/wordset/${wordSet._id}`}>
               <CardTitle className="text-xl font-bold">
                 {wordSet.name}
               </CardTitle>
             </a>
-            <div className="flex gap-6">
-              <a href={`/category/${categoryId}/wordset/${wordSet._id}/edit`} >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                >
+            <div className="flex">
+              <a href={`/category/${categoryId}/wordset/${wordSet._id}/edit`}>
+                <Button variant="ghost" size="sm" className="text-gray-600 ">
                   <Pencil className="h-4 w-4" />
                 </Button>
               </a>

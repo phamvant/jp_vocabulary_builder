@@ -43,9 +43,12 @@ export async function GET(
       ret = await getSentences({ str: wordSet[0].words });
     }
 
-    return NextResponse.json(ret);
+    return NextResponse.json({
+      name: wordSet[0].name,
+      words: ret,
+      isPublic: categoryExists.isPublic,
+    });
   } catch (error) {
-    console.error("Error fetching words:", error);
     return NextResponse.json({ error: error }, { status: 500 });
   }
 }
@@ -80,7 +83,6 @@ export async function POST(
 
     return NextResponse.json({ success: true, result });
   } catch (error) {
-    console.error("Error saving word:", error);
     return NextResponse.json({ error: "Failed to save word" }, { status: 500 });
   }
 }
@@ -117,7 +119,6 @@ export async function DELETE(
 
     return NextResponse.json({ success: true, result });
   } catch (error) {
-    console.error("Error deleting:", error);
     return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
   }
 }
