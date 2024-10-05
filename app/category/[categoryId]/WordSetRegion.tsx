@@ -47,9 +47,9 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
       if (!response.ok) throw new Error("Failed to delete category");
 
       setWordSets(wordSets.filter((set) => set._id !== wordSetId));
-    } catch (error) {
-    } finally {
-    }
+
+      console.log(wordSets);
+    } catch (error) {}
   };
 
   return (
@@ -60,12 +60,18 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
           className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-2xl">
-            <a href={`/category/${categoryId}/wordset/${wordSet._id}`}>
-              <CardTitle className="text-xl font-bold">
-                {wordSet.name}
-              </CardTitle>
-            </a>
+            <CardTitle className="text-xl font-bold">
+              {!wordSet.words.length ? (
+                wordSet.name
+              ) : (
+                <a href={`/category/${categoryId}/wordset/${wordSet._id}`}>
+                  {wordSet.name}
+                </a>
+              )}
+            </CardTitle>
+
             <div className="flex">
+              {}
               <a href={`/category/${categoryId}/wordset/${wordSet._id}/edit`}>
                 <Button variant="ghost" size="sm" className="text-gray-600 ">
                   <Pencil className="h-4 w-4" />

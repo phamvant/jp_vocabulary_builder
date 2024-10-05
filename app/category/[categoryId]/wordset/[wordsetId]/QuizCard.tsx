@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { redirect } from "next/navigation";
 
 interface ISentence {
   content: string;
@@ -52,7 +53,7 @@ export default function QuizCard({
               <p>{name}</p>
               <a
                 target="_blank"
-                href={`https://mazii.net/vi-VN/search/word/javi/${questions[currentQuestion]?.word ?? "null"}`}
+                href={`https://mazii.net/vi-VN/search/word/javi/${questions?.[currentQuestion]?.word ?? "null"}`}
                 className="text-sm text-blue-600"
               >
                 辞書へ
@@ -87,16 +88,17 @@ export default function QuizCard({
         </CardContent>
         <CardFooter className="flex justify-center gap-6">
           <Button
-            className="bg-secondary text-foreground"
+            className="bg-secondary text-foreground hover:text-primary hover:bg-primary-foreground"
             onClick={() => handleNextQuestion(false)}
           >
             前
           </Button>
-          <Button onClick={() => handleNextQuestion(true)}>次</Button>
 
           {currentQuestion === questions!.length - 1 ? (
             <Button onClick={handleRepeat}>もう一度</Button>
-          ) : null}
+          ) : (
+            <Button onClick={() => handleNextQuestion(true)}>次</Button>
+          )}
         </CardFooter>
       </Card>
     </div>

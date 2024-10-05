@@ -31,7 +31,7 @@ export default async function EditPage({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto p-4 lg:px-96">
+      <div className="container mx-auto p-4 md:max-w-[30rem] max-w-[24rem]">
         <h1 className="text-2xl font-bold text-center mb-10 mt-10">
           {wordSet.name}
         </h1>

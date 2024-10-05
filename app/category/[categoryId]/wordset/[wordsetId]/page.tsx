@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import QuizCard from "./QuizCard";
 
 export default async function Quiz({
@@ -12,6 +13,7 @@ export default async function Quiz({
         {
           method: "GET",
           cache: "no-cache",
+          headers: new Headers(headers()),
         },
       );
 
@@ -27,5 +29,5 @@ export default async function Quiz({
 
   const words = await fetchWords();
 
-  return <QuizCard words={words.wordSet} name={words.name} />;
+  return <QuizCard words={words.words} name={words.name} />;
 }

@@ -29,7 +29,7 @@ export default function WordBox({
   const { toast } = useToast();
 
   const handleChange = (index: number, value: string) => {
-    if (wordSet) {
+    if (wordSet.isPublic) {
       toast({
         title: "Can't modify public set",
       });
@@ -42,7 +42,7 @@ export default function WordBox({
   };
 
   const handleDelete = () => {
-    if (wordSet) {
+    if (wordSet.isPublic) {
       toast({
         title: "Can't modify public set",
       });
@@ -56,13 +56,7 @@ export default function WordBox({
   };
 
   const handleAdd = () => {
-    if (wordSet) {
-      toast({
-        title: "Can't modify public set",
-      });
-      return;
-    }
-    if (wordSet) {
+    if (wordSet.isPublic) {
       toast({
         title: "Can't modify public set",
       });
@@ -73,7 +67,7 @@ export default function WordBox({
   };
 
   const handleSave = async () => {
-    if (wordSet) {
+    if (wordSet.isPublic) {
       toast({
         title: "Can't modify public set",
       });
@@ -112,14 +106,14 @@ export default function WordBox({
   };
 
   return (
-    <div className="w-full flex flex-col gap-4 my-10">
+    <div className="w-full flex flex-col gap-4 py-10 px-6">
       {words.map((str, index) => (
         <div key={index} className="w-full flex justify-between items-center">
           <Input
             type="text"
             value={str}
             onChange={(e) => handleChange(index, e.target.value)}
-            className="p-6 w-4/5 shadow-none rounded-3xl focus:outline-none focus:border-slate-300 text-base"
+            className="p-6 w-4/5 rounded-3xl focus:outline-none text-base bg-white shadow-md"
           />
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -155,15 +149,15 @@ export default function WordBox({
       <Button
         onClick={handleAdd}
         variant={"secondary"}
-        className="text-base w-full mt-5 rounded-3xl"
+        className="text-base w-full mt-5 rounded-3xl shadow-md bg-card"
       >
         追加
       </Button>
       <Button
         onClick={handleSave}
-        className="text-base w-full bg-green-600 hover:bg-green-700 rounded-3xl"
+        className="text-base w-full rounded-3xl shadow-xl bg-green-600 hover:bg-green-700 text-background"
       >
-        <Save className="mr-2 h-4 w-4" /> 保存
+        保存
       </Button>
     </div>
   );
