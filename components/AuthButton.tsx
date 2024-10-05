@@ -4,22 +4,20 @@
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "./ui/button";
+import { Session } from "next-auth";
 
-const AuthButtons = () => {
-  const { data: session } = useSession();
-
+const AuthButtons = ({ session }: { session: Session | null }) => {
   return (
-    <>
+    <div>
       {!session ? (
         <Button onClick={() => signIn("google")}>Sign In with Google</Button>
       ) : (
-        <>
+        <div className="flex justify-between items-center">
           <p>こんにちは！ {session.user.name}</p>
-          <br />
           <Button onClick={() => signOut()}>Sign Out</Button>
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 

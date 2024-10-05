@@ -1,8 +1,12 @@
 import AuthButtons from "@/components/AuthButton";
 import Form from "@/components/Form";
+import { Button } from "@/components/ui/button";
+import { getServerSession } from "next-auth";
 import { headers } from "next/headers";
 
 export default async function JapaneseVocabSaaS() {
+  const sesson = await getServerSession();
+
   const fetchWords = async () => {
     try {
       const response = await fetch(`${process.env.BASEURL}/api/categories`, {
@@ -22,7 +26,16 @@ export default async function JapaneseVocabSaaS() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto p-4 xl:px-60">
-        <AuthButtons />
+        <div className="flex flex-col gap-4">
+          <AuthButtons session={sesson} />
+          {sesson ? (
+            <a href="/saved">
+              <Button className="bg-pink-400/80 hover:bg-pink-400">
+                気に入る
+              </Button>
+            </a>
+          ) : null}
+        </div>
         <header className="mb-8 text-center">
           <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2"></h1>
           <p className="text-xl text-gray-600 dark:text-gray-300"></p>

@@ -4,12 +4,15 @@ import { headers } from "next/headers";
 import { ICategory, SharedStateProvider } from "./ShareState";
 import SubmitForm from "./SubmitForm";
 import WordSetRegion from "./WordSetRegion";
+import { getServerSession } from "next-auth";
 
 export default async function Page({
   params,
 }: {
   params: { categoryId: string };
 }) {
+  const session = await getServerSession();
+
   const response = await fetch(
     `${process.env.BASEURL}/api/categories/${params.categoryId}/wordset`,
     {
@@ -30,7 +33,7 @@ export default async function Page({
     <SharedStateProvider initWordSets={wordSets}>
       <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
         <div className="container mx-auto p-4 xl:px-60">
-          <AuthButtons />
+          <AuthButtons session={session} />
           <header className="mb-8 text-center">
             <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2 mt-10">
               {data.category}

@@ -29,5 +29,5 @@ export default async function Quiz({
 
   const words = await fetchWords();
 
-  return <QuizCard words={words.words} name={words.name} />;
+  return <QuizCard words={words.words} name={words.name} showSave={true} />;
 }
