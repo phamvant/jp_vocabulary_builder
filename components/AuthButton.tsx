@@ -10,11 +10,11 @@ const AuthButtons = ({ session }: { session: Session | null }) => {
   return (
     <div>
       {!session ? (
-        <Button onClick={() => signIn("google")}>Sign In with Google</Button>
+        <Button onClick={() => signIn("google")}>Googleでログイン</Button>
       ) : (
         <div className="flex justify-between items-center">
           <p>こんにちは！ {session.user.name}</p>
-          <Button onClick={() => signOut()}>Sign Out</Button>
+          <Button onClick={() => signOut()}>ログアウト</Button>
         </div>
       )}
     </div>

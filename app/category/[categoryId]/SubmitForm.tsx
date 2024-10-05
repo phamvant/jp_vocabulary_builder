@@ -2,14 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
-import { PlusCircle, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { useSharedState } from "./ShareState";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -58,21 +51,19 @@ export default function SubmitForm({ categoryId }: { categoryId: string }) {
       ]);
 
       toast({
-        title: "Set added successfully",
-        description: `New set "${newSet}" has been added.`,
+        title: "作成した",
       });
 
       setNewSet("");
     } catch (err) {
       if (err instanceof Error) {
         toast({
-          title: "Error adding set",
-          description: err.message,
+          title: "作成失敗した",
+          content: err.message,
         });
       } else {
         toast({
-          title: "Error adding set",
-          description: "An unknown error occurred",
+          title: "作成失敗",
         });
       }
       return;
@@ -87,7 +78,7 @@ export default function SubmitForm({ categoryId }: { categoryId: string }) {
             type="text"
             value={newSet}
             onChange={(e) => setNewSet(e.target.value)}
-            placeholder="分類を記入"
+            placeholder="新しいサーブカテゴリー"
             className="flex-grow text-lg py-6 rounded-2xl"
             // disabled={isLoading}
           />
@@ -97,7 +88,7 @@ export default function SubmitForm({ categoryId }: { categoryId: string }) {
             className="w-full md:w-auto py-6 rounded-2xl"
           >
             <BookOpen className="w-4 h-4 mr-2" />
-            分類を追加
+            カテゴリーを追加
           </Button>
         </div>
       </form>

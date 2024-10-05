@@ -65,8 +65,8 @@ export default function QuizCard({
   const handleSave = async (idx: number) => {
     if (!session) {
       toast({
-        title: "Unauthenticated",
-        description: "Please login",
+        title: "認証失敗",
+        description: "ログインしてください",
       });
       return;
     }
@@ -90,7 +90,7 @@ export default function QuizCard({
       );
     } catch (error) {
       toast({
-        title: "Failed to add",
+        title: "保存失敗",
       });
     }
   };
@@ -98,8 +98,8 @@ export default function QuizCard({
   const handleDelete = async (idx: number) => {
     if (!session) {
       toast({
-        title: "Unauthenticated",
-        description: "Please login",
+        title: "認証失敗",
+        description: "ログインしてください",
       });
       return;
     }

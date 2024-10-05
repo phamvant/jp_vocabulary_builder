@@ -31,7 +31,7 @@ export default function WordBox({
   const handleChange = (index: number, value: string) => {
     if (wordSet.isPublic) {
       toast({
-        title: "Can't modify public set",
+        title: "公共セットを変更できない",
       });
       return;
     }
@@ -44,7 +44,7 @@ export default function WordBox({
   const handleDelete = () => {
     if (wordSet.isPublic) {
       toast({
-        title: "Can't modify public set",
+        title: "公共セットを変更できない",
       });
       return;
     }
@@ -58,7 +58,7 @@ export default function WordBox({
   const handleAdd = () => {
     if (wordSet.isPublic) {
       toast({
-        title: "Can't modify public set",
+        title: "公共セットを変更できない",
       });
       return;
     }
@@ -69,7 +69,7 @@ export default function WordBox({
   const handleSave = async () => {
     if (wordSet.isPublic) {
       toast({
-        title: "Can't modify public set",
+        title: "公共セットを変更できない",
       });
       return;
     }
@@ -96,11 +96,11 @@ export default function WordBox({
 
       // Success: Show a toast notification
       toast({
-        title: "Words saved successfully!",
+        title: "保存した",
       });
     } catch (error) {
       toast({
-        title: "Error adding words",
+        title: "エラー",
       });
     }
   };

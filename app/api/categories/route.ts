@@ -32,6 +32,10 @@ export async function POST(request: Request) {
       createdDate: new Date(),
     });
 
+    if (!result) {
+      throw new Error();
+    }
+
     const newDocument = await collection.findOne(
       { _id: result.insertedId },
       { projection: { _id: 1, createdDate: 1 } }, // Project only the fields you need

@@ -26,8 +26,8 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
   const handleDeleteSet = async (wordSetId: string) => {
     if (!session) {
       toast({
-        title: "Unauthenticated",
-        description: "Please login",
+        title: "認証失敗",
+        description: "ログインしてください",
       });
       return;
     }
@@ -88,21 +88,18 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
+                    <AlertDialogTitle>確認</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will permanently delete the "{wordSet.name}" category
-                      and all its words.
+                      "{wordSet.name}" を削除してよろしいですか？
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel>キャンセル</AlertDialogCancel>
                     <AlertDialogAction
                       className="bg-red-500 text-white hover:bg-red-700"
                       onClick={() => handleDeleteSet(wordSet._id)}
                     >
-                      Delete
+                      削除
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -123,12 +120,10 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
               </ul>
             ) : (
               <p className="text-gray-500 dark:text-gray-400 text-center italic">
-                No words added yet.
+                漢字なし
               </p>
             )}
           </CardContent>
-
-          {/* <CardContent className="pt-4">Created at: 10/02/2024</CardContent> */}
         </Card>
       ))}
     </div>

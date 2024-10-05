@@ -38,8 +38,8 @@ export default function Form({
 
     if (!session) {
       toast({
-        title: "Unauthenticated",
-        description: "Please login",
+        title: "認証失敗",
+        description: "ログインしてください",
       });
       return;
     }
@@ -76,8 +76,8 @@ export default function Form({
   const handleDeleteCategory = async (id: string) => {
     if (!session) {
       toast({
-        title: "Unauthenticated",
-        description: "Please login",
+        title: "認証失敗",
+        description: "ログインしてください",
       });
       return;
     }
@@ -108,7 +108,7 @@ export default function Form({
               type="text"
               value={newCategory}
               onChange={(e) => setNewCategory(e.target.value)}
-              placeholder="分類を記入"
+              placeholder="新しいカテゴリー"
               className="flex-grow text-lg py-6 rounded-2xl"
               // disabled={isLoading}
             />
@@ -118,7 +118,7 @@ export default function Form({
               className="w-full md:w-auto py-6 rounded-2xl"
             >
               <BookOpen className="w-4 h-4 mr-2" />
-              分類を追加
+              カテゴリーを追加
             </Button>
           </div>
         </form>
@@ -148,21 +148,18 @@ export default function Form({
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
+                    <AlertDialogTitle>確認</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will permanently delete the "{category.category}"
-                      category and all its words.
+                      "{category.category}" を削除してよろしいですか？
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel>キャンセル</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={() => handleDeleteCategory(category._id)}
                       className="bg-red-500 text-white hover:bg-red-700"
                     >
-                      Delete
+                      削除
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -170,7 +167,7 @@ export default function Form({
             </CardHeader>
 
             <CardContent className="pt-4">
-              Created at: {category.createdDate?.split("T")[0]}
+              作成日: {category.createdDate?.split("T")[0]}
             </CardContent>
           </Card>
         ))}
