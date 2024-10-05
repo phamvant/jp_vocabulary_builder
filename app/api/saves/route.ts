@@ -49,6 +49,10 @@ export async function POST(request: Request) {
         },
       );
 
+      if (!result.modifiedCount) {
+        throw new Error();
+      }
+
       return NextResponse.json(result, { status: 200 });
     } else {
       const newSave = {
@@ -61,6 +65,10 @@ export async function POST(request: Request) {
       };
 
       const result = await collection.insertOne(newSave);
+
+      if (!result) {
+        throw new Error();
+      }
 
       return NextResponse.json(result, { status: 200 });
     }

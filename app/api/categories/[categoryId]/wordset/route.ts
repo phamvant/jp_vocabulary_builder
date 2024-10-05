@@ -86,7 +86,7 @@ export async function POST(
       },
     );
 
-    if (!result) {
+    if (!result.modifiedCount) {
       return NextResponse.json({ error: "Write failed" }, { status: 404 });
     }
 

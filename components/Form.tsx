@@ -82,8 +82,6 @@ export default function Form({
       return;
     }
 
-    setCategories((prev) => prev.filter((val) => val._id !== id));
-
     try {
       const response = await fetch(`/api/categories`, {
         method: "DELETE",
@@ -94,8 +92,12 @@ export default function Form({
       });
 
       if (!response.ok) throw new Error("Failed to delete category");
+
+      setCategories((prev) => prev.filter((val) => val._id !== id));
     } catch (error) {
-    } finally {
+      toast({
+        title: "削除エラー",
+      });
     }
   };
 

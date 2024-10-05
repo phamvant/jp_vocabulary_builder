@@ -81,6 +81,10 @@ export async function POST(
       },
     );
 
+    if (!result.modifiedCount) {
+      throw new Error();
+    }
+
     return NextResponse.json({ success: true, result });
   } catch (error) {
     return NextResponse.json({ error: "Failed to save word" }, { status: 500 });

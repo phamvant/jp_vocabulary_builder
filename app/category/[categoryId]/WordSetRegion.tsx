@@ -47,7 +47,11 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
       if (!response.ok) throw new Error("Failed to delete category");
 
       setWordSets(wordSets.filter((set) => set._id !== wordSetId));
-    } catch (error) {}
+    } catch (error) {
+      toast({
+        title: "削除エラー",
+      });
+    }
   };
 
   return (

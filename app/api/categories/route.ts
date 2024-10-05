@@ -41,6 +41,10 @@ export async function POST(request: Request) {
       { projection: { _id: 1, createdDate: 1 } }, // Project only the fields you need
     );
 
+    if (!newDocument) {
+      throw new Error();
+    }
+
     return NextResponse.json({
       success: true,
       result: {
@@ -71,6 +75,10 @@ export async function DELETE(request: Request) {
       isPublic: false,
       userId: session.user.id,
     });
+
+    if (!result.deletedCount) {
+      throw new Error();
+    }
 
     return NextResponse.json({ success: true, result });
   } catch (error) {
