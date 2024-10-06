@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import MaziiPopup from "@/components/mazii-popup";
 
 interface ISentence {
   _id: string;
@@ -172,13 +173,17 @@ export default function QuizCard({
                 </AlertDialog>
               )}
               <p>{name}</p>
-              <a
-                target="_blank"
+
+              <MaziiPopup
                 href={`https://mazii.net/vi-VN/search/word/javi/${sentences?.[currentSentence]?.word ?? "null"}`}
-                className="text-sm text-blue-600"
               >
-                辞書へ
-              </a>
+                <a
+                  target="_blank"
+                  className="text-sm text-blue-600 cursor-pointer"
+                >
+                  辞書へ
+                </a>
+              </MaziiPopup>
             </div>
           </CardTitle>
         </CardHeader>

@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Japanese Vocabulary Builder",
+  title: "漢字学び",
   description: "A Thuan's product",
 };
 
