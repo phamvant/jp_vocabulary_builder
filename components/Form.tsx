@@ -73,7 +73,8 @@ export default function Form({
     }
   };
 
-  const handleDeleteCategory = async (id: string) => {
+  const handleDeleteCategory = async (e: any, id: string) => {
+    e.preventDefault();
     if (!session) {
       toast({
         title: "認証失敗",
@@ -99,6 +100,10 @@ export default function Form({
         title: "削除エラー",
       });
     }
+  };
+
+  const navigateToWordSet = (categoryId: string) => {
+    window.location.href = `/category/${categoryId}`;
   };
 
   return (
@@ -128,50 +133,63 @@ export default function Form({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rounded-2xl">
         {categories.map((category) => (
-          <Card
-            key={category._id}
-            className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
-          >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-lg rounded-t-2xl">
-              <a href={`category/${category._id}`}>
+          <div key={category._id}>
+            <Card
+              className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+              onClick={(e) => {
+                const isDeleteButton = (e.target as HTMLElement).closest(
+                  ".text-red-500",
+                );
+                if (!isDeleteButton) {
+                  navigateToWordSet(category._id);
+                }
+              }}
+            >
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-2xl">
                 <CardTitle className="text-xl font-bold">
                   {category.category}
                 </CardTitle>
-              </a>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>確認</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      "{category.category}" を削除してよろしいですか？
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>キャンセル</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => handleDeleteCategory(category._id)}
-                      className="bg-red-500 text-white hover:bg-red-700"
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                     >
-                      削除
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </CardHeader>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>確認</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        "{category.category}" を削除してよろしいですか？
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        キャンセル
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={(e) => handleDeleteCategory(e, category._id)}
+                        className="bg-red-500 text-white hover:bg-red-700"
+                      >
+                        削除
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </CardHeader>
 
-            <CardContent className="pt-4">
-              作成日: {category.createdDate?.split("T")[0]}
-            </CardContent>
-          </Card>
+              <CardContent className="pt-4">
+                作成日: {category.createdDate?.split("T")[0]}
+              </CardContent>
+            </Card>
+          </div>
         ))}
       </div>
     </div>

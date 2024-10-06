@@ -81,7 +81,7 @@ export async function POST(
       },
       {
         $push: {
-          wordSet: { _id: newSetId, name: newSetName, words: [""] },
+          wordSet: { _id: newSetId, name: newSetName, words: [] },
         },
       },
     );

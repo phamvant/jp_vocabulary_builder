@@ -72,6 +72,12 @@ export default function QuizCard({
       return;
     }
 
+    setSentences((prev) =>
+      prev.map((sentence, i) =>
+        i === idx ? { ...sentence, isSaved: true } : sentence,
+      ),
+    );
+
     try {
       const response = await fetch(`/api/saves`, {
         method: "POST",
@@ -83,13 +89,13 @@ export default function QuizCard({
       });
 
       if (!response.ok) throw new Error("Failed to add favorite");
-
+    } catch (error) {
       setSentences((prev) =>
         prev.map((sentence, i) =>
-          i === idx ? { ...sentence, isSaved: true } : sentence,
+          i === idx ? { ...sentence, isSaved: false } : sentence,
         ),
       );
-    } catch (error) {
+
       toast({
         title: "保存失敗",
       });

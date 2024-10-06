@@ -23,7 +23,9 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
   const { data: session } = useSession();
   const { toast } = useToast();
 
-  const handleDeleteSet = async (wordSetId: string) => {
+  const handleDeleteSet = async (e: any, wordSetId: string) => {
+    e.stopPropagation();
+
     if (!session) {
       toast({
         title: "認証失敗",
@@ -54,26 +56,36 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
     }
   };
 
+  const navigateToWordSet = (wordSetId: string, idx: number) => {
+    console.log(wordSets[idx]);
+    if (wordSets[idx].words.length) {
+      window.location.href = `/category/${categoryId}/wordset/${wordSetId}`;
+    } else {
+      toast({
+        title: "文字なし",
+      });
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rounded-2xl">
       {wordSets.map((wordSet, idx) => (
         <Card
           key={wordSet._id}
-          className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
+          className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+          onClick={(e) => {
+            const isDeleteButton = (e.target as HTMLElement).closest(
+              ".text-red-500",
+            );
+            if (!isDeleteButton) {
+              navigateToWordSet(wordSet._id, idx);
+            }
+          }}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-2xl">
-            <CardTitle className="text-xl font-bold">
-              {!wordSet.words.length ? (
-                wordSet.name
-              ) : (
-                <a href={`/category/${categoryId}/wordset/${wordSet._id}`}>
-                  {wordSet.name}
-                </a>
-              )}
-            </CardTitle>
+            <CardTitle className="text-xl font-bold">{wordSet.name}</CardTitle>
 
             <div className="flex">
-              {}
               <a href={`/category/${categoryId}/wordset/${wordSet._id}/edit`}>
                 <Button variant="ghost" size="sm" className="text-gray-600 ">
                   <Pencil className="h-4 w-4" />
@@ -98,10 +110,16 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>キャンセル</AlertDialogCancel>
+                    <AlertDialogCancel
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      キャンセル
+                    </AlertDialogCancel>
                     <AlertDialogAction
                       className="bg-red-500 text-white hover:bg-red-700"
-                      onClick={() => handleDeleteSet(wordSet._id)}
+                      onClick={(e) => handleDeleteSet(e, wordSet._id)}
                     >
                       削除
                     </AlertDialogAction>
