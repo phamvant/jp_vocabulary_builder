@@ -1,5 +1,11 @@
 import { headers } from "next/headers";
 import QuizCard from "./QuizCard";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default async function Quiz({
   params,
@@ -14,7 +20,7 @@ export default async function Quiz({
           method: "GET",
           cache: "no-cache",
           headers: new Headers(headers()),
-        },
+        }
       );
 
       if (!response.ok) throw new Error("Failed to fetch words");
@@ -29,5 +35,7 @@ export default async function Quiz({
 
   const words = await fetchWords();
 
-  return <QuizCard words={words.words} name={words.name} showSave={true} />;
+  return (
+      <QuizCard words={words.words} name={words.name} showSave={true} />
+  );
 }

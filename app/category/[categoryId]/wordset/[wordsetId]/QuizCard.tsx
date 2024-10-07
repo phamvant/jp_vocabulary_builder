@@ -49,7 +49,7 @@ export default function QuizCard({
   const { toast } = useToast();
 
   const [sentences, setSentences] = useState<ISentence[]>(
-    words.map((word) => ({ ...word, isSaved: false })),
+    words.map((word) => ({ ...word, isSaved: false }))
   );
   const [currentSentence, setCurrentSentence] = useState(0);
   const [isMean, setIsMean] = useState<boolean>(false);
@@ -74,8 +74,8 @@ export default function QuizCard({
 
     setSentences((prev) =>
       prev.map((sentence, i) =>
-        i === idx ? { ...sentence, isSaved: true } : sentence,
-      ),
+        i === idx ? { ...sentence, isSaved: true } : sentence
+      )
     );
 
     try {
@@ -92,8 +92,8 @@ export default function QuizCard({
     } catch (error) {
       setSentences((prev) =>
         prev.map((sentence, i) =>
-          i === idx ? { ...sentence, isSaved: false } : sentence,
-        ),
+          i === idx ? { ...sentence, isSaved: false } : sentence
+        )
       );
 
       toast({
@@ -135,9 +135,9 @@ export default function QuizCard({
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl h-2/3 hover:bg-transparent">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
+      <Card className="w-full max-w-2xl h-2/3">
+        <CardContent className="p-6">
+          <div className="text-2xl font-bold text-center mb-8">
             <div className="flex justify-between items-center">
               {showSave ? (
                 sentences?.[currentSentence].isSaved ? (
@@ -147,7 +147,6 @@ export default function QuizCard({
                     className="size-5 text-pink-400 mr-2"
                     onClick={() => handleSave(currentSentence)}
                   />
-              
                 )
               ) : (
                 <AlertDialog>
@@ -182,7 +181,9 @@ export default function QuizCard({
               <p>{name}</p>
 
               <MaziiPopup
-                href={`https://mazii.net/vi-VN/search/word/javi/${sentences?.[currentSentence]?.word ?? "null"}`}
+                href={`https://mazii.net/vi-VN/search/word/javi/${
+                  sentences?.[currentSentence]?.word ?? "null"
+                }`}
               >
                 <a
                   target="_blank"
@@ -192,13 +193,14 @@ export default function QuizCard({
                 </a>
               </MaziiPopup>
             </div>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-6">
-          <>
+          </div>
+          <div>
+            <p className="text-center mb-4">
+              {currentSentence} / {sentences.length}
+            </p>
             <Progress
               value={((currentSentence + 1) / sentences.length) * 100}
-              className="w-full "
+              className="w-full"
             />
             <div
               className="text-xl text-center py-20  rounded-xl"
@@ -217,14 +219,10 @@ export default function QuizCard({
                   sentences[currentSentence]?.content
                 ))}
             </div>
-          </>
+          </div>
         </CardContent>
         <CardFooter className="flex justify-center gap-6">
-          <Button
-            onClick={() => handleNextQuestion(false)}
-          >
-            前
-          </Button>
+          <Button onClick={() => handleNextQuestion(false)}>前</Button>
 
           {currentSentence === sentences!.length - 1 ? (
             <Button onClick={() => setCurrentSentence(0)}>もう一度</Button>
