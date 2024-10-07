@@ -72,7 +72,7 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
       {wordSets.map((wordSet, idx) => (
         <Card
           key={wordSet._id}
-          className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+          className="cursor-pointer"
           onClick={(e) => {
             const isDeleteButton = (e.target as HTMLElement).closest(
               ".text-red-500",
@@ -82,13 +82,13 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
             }
           }}
         >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 dark:bg-gray-700 rounded-t-2xl">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle className="text-xl font-bold">{wordSet.name}</CardTitle>
 
-            <div className="flex">
+            <div className="flex gap-4">
               <a href={`/category/${categoryId}/wordset/${wordSet._id}/edit`}>
-                <Button variant="ghost" size="sm" className="text-gray-600 ">
-                  <Pencil className="h-4 w-4" />
+                <Button variant="ghost" size="sm" className="text-white w-8 p-0 rounded-full">
+                  <Pencil className="size-4" />
                 </Button>
               </a>
 
@@ -97,9 +97,9 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                    className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 w-8 p-0 rounded-full"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="size-4" />
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -134,7 +134,7 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
                 {wordSet.words.slice(0, 3).map((word, index) => (
                   <li
                     key={index}
-                    className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-2 rounded-2xl pl-4"
+                    className="flex items-center justify-between bg-white/10 p-2 rounded-2xl pl-4"
                   >
                     <span className="text-lg">{word}</span>
                   </li>

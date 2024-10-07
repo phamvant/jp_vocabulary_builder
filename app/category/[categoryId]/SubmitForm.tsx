@@ -6,6 +6,7 @@ import { BookOpen } from "lucide-react";
 import { useSharedState } from "./ShareState";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { Card } from "@/components/ui/card";
 
 export default function SubmitForm({ categoryId }: { categoryId: string }) {
   const [newSet, setNewSet] = useState("");
@@ -71,15 +72,15 @@ export default function SubmitForm({ categoryId }: { categoryId: string }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
-      <form className="mb-4" onSubmit={onAddSet}>
+    <Card className="rounded-2xl shadow-lg p-6 mb-8">
+      <form onSubmit={onAddSet}>
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
           <Input
             type="text"
             value={newSet}
             onChange={(e) => setNewSet(e.target.value)}
             placeholder="新しいサーブカテゴリー"
-            className="flex-grow text-lg py-6 rounded-2xl"
+            className="flex-grow text-lg py-6 rounded-2xl mb-4"
             // disabled={isLoading}
           />
           <Button
@@ -92,6 +93,6 @@ export default function SubmitForm({ categoryId }: { categoryId: string }) {
           </Button>
         </div>
       </form>
-    </div>
+    </Card>
   );
 }

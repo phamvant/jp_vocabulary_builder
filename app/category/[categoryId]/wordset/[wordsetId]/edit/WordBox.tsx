@@ -113,7 +113,7 @@ export default function WordBox({
             type="text"
             value={str}
             onChange={(e) => handleChange(index, e.target.value)}
-            className="p-6 w-4/5 rounded-3xl focus:outline-none text-base bg-white shadow-md"
+            className="p-6 w-4/5 rounded-3xl focus:outline-none text-base shadow-md text-white"
           />
           <AlertDialog>
             <AlertDialogTrigger asChild>
