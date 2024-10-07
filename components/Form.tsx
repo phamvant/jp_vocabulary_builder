@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusCircle, Trash2, BookOpen, RefreshCw } from "lucide-react";
+import { Trash2, BookOpen } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 export default function Form({
   inCategories,
@@ -29,7 +30,7 @@ export default function Form({
 
   const [categories, setCategories] =
     useState<{ category: string; _id: string; createdDate: string }[]>(
-      inCategories,
+      inCategories
     );
   const [newCategory, setNewCategory] = useState("");
 
@@ -102,14 +103,10 @@ export default function Form({
     }
   };
 
-  const navigateToWordSet = (categoryId: string) => {
-    window.location.href = `/category/${categoryId}`;
-  };
-
   return (
     <div>
       <div className="backdrop-blur-2xl bg-transparent rounded-2xl shadow-lg border-[1px] border-white p-6 mb-8">
-        <form onSubmit={handleAddCategory} >
+        <form onSubmit={handleAddCategory}>
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
             <Input
               type="text"
@@ -134,61 +131,65 @@ export default function Form({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rounded-2xl">
         {categories.map((category) => (
           <div key={category._id}>
-            <Card
-              className="shadow-lg hover:shadow-xl cursor-pointer"
+            <Link
+              prefetch={true}
+              href={`/category/${category._id}`}
               onClick={(e) => {
                 const isDeleteButton = (e.target as HTMLElement).closest(
-                  ".text-red-500",
+                  ".text-red-500"
                 );
-                if (!isDeleteButton) {
-                  navigateToWordSet(category._id);
+                if (isDeleteButton) {
+                  e.preventDefault(); 
+                  e.stopPropagation();
                 }
               }}
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0">
-                <CardTitle className="text-xl font-bold">
-                  {category.category}
-                </CardTitle>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>確認</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        "{category.category}" を削除してよろしいですか？
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
+              <Card className="shadow-lg hover:shadow-xl cursor-pointer">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                  <CardTitle className="text-xl font-bold">
+                    {category.category}
+                  </CardTitle>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                       >
-                        キャンセル
-                      </AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={(e) => handleDeleteCategory(e, category._id)}
-                        className="bg-red-500 text-white hover:bg-red-700"
-                      >
-                        削除
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </CardHeader>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>確認</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          "{category.category}" を削除してよろしいですか？
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                        >
+                          キャンセル
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={(e) => handleDeleteCategory(e, category._id)}
+                          className="bg-red-500 text-white hover:bg-red-700"
+                        >
+                          削除
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </CardHeader>
 
-              <CardContent className="pt-4">
-                作成日: {category.createdDate?.split("T")[0]}
-              </CardContent>
-            </Card>
+                <CardContent className="pt-4">
+                  作成日: {category.createdDate?.split("T")[0]}
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         ))}
       </div>
