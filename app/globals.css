@@ -87,3 +87,10 @@
         @apply bg-background text-foreground;
     }
 }
+
+body {
+    background-image: url("../public/main-bg.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
+}

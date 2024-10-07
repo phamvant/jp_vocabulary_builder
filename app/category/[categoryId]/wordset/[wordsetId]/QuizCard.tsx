@@ -134,8 +134,8 @@ export default function QuizCard({
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <Card className="w-full max-w-2xl h-2/3">
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <Card className="w-full max-w-2xl h-2/3 hover:bg-transparent">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
             <div className="flex justify-between items-center">
@@ -144,9 +144,10 @@ export default function QuizCard({
                   <HeartFilledIcon className="size-5 text-pink-400" />
                 ) : (
                   <HeartIcon
-                    className="size-5 text-pink-400"
+                    className="size-5 text-pink-400 mr-2"
                     onClick={() => handleSave(currentSentence)}
                   />
+              
                 )
               ) : (
                 <AlertDialog>
@@ -185,7 +186,7 @@ export default function QuizCard({
               >
                 <a
                   target="_blank"
-                  className="text-sm text-blue-600 cursor-pointer"
+                  className="text-sm text-blue-200 cursor-pointer"
                 >
                   辞書へ
                 </a>
@@ -220,7 +221,6 @@ export default function QuizCard({
         </CardContent>
         <CardFooter className="flex justify-center gap-6">
           <Button
-            className="bg-secondary text-foreground hover:text-primary hover:bg-primary-foreground"
             onClick={() => handleNextQuestion(false)}
           >
             前

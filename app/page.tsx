@@ -27,7 +27,7 @@ export default async function JapaneseVocabSaaS() {
   const categories = await fetchWords();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-b">
       <div className="container mx-auto p-4 xl:px-60">
         <div className="flex flex-col gap-4">
           <AuthButtons session={session} />
