@@ -135,7 +135,7 @@ export default function QuizCard({
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl h-2/3">
+      <Card className="w-full max-w-2xl h-2/3 hover:bg-transparent">
         <CardContent className="p-6">
           <div className="text-2xl font-bold text-center mb-8">
             <div className="flex justify-between items-center">
@@ -196,7 +196,7 @@ export default function QuizCard({
           </div>
           <div>
             <p className="text-center mb-4">
-              {currentSentence} / {sentences.length}
+              {currentSentence + 1} / {sentences.length}
             </p>
             <Progress
               value={((currentSentence + 1) / sentences.length) * 100}
