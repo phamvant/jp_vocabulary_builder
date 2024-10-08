@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -37,16 +37,50 @@ interface ISentence {
 }
 
 export default function QuizCard({
-  words,
-  name,
+  categoryId,
+  wordsetId,
   showSave = false,
 }: {
-  words: ISentence[];
-  name: string;
+  categoryId: string;
+  wordsetId: string;
   showSave?: boolean;
 }) {
   const { data: session } = useSession();
+  const [words, setWords] = useState<ISentence[]>([
+    {
+      _id: "",
+      content: "",
+      mean: "",
+      transcription: "",
+      word: "",
+      isSaved: true,
+    },
+  ]);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchWords = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.BASEURL}/api/categories/${categoryId}/wordset/${wordsetId}`,
+          {
+            method: "GET",
+            cache: "no-cache",
+          }
+        );
+
+        if (!response.ok) throw new Error("Failed to fetch words");
+
+        const data = await response.json();
+
+        setWords(data.words)
+      } catch (error) {
+        return false;
+      }
+    };
+
+    fetchWords();
+  }, []);
 
   const [sentences, setSentences] = useState<ISentence[]>(
     words.map((word) => ({ ...word, isSaved: false }))
@@ -178,7 +212,7 @@ export default function QuizCard({
                   </AlertDialogContent>
                 </AlertDialog>
               )}
-              <p>{name}</p>
+              <p></p>
 
               <MaziiPopup
                 href={`https://mazii.net/vi-VN/search/word/javi/${

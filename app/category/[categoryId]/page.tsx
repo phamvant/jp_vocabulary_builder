@@ -1,37 +1,17 @@
+"use client";
+
 import AuthButtons from "@/components/AuthButton";
-import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import { ICategory, SharedStateProvider } from "./ShareState";
 import SubmitForm from "./SubmitForm";
 import WordSetRegion from "./WordSetRegion";
-import { getServerSession } from "next-auth";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
 
-export default async function Page({
-  params,
-}: {
-  params: { categoryId: string };
-}) {
-  const session = await getServerSession();
-
-  const response = await fetch(
-    `${process.env.BASEURL}/api/categories/${params.categoryId}/wordset`,
-    {
-      cache: "no-cache",
-      method: "GET",
-      headers: new Headers(headers()),
-    },
-  );
-
-  if (!response.ok) {
-    redirect("/");
-  }
-
-  const data = (await response.json()) as ICategory;
-  const wordSets = data.wordSet;
+export default function Page({ params }: { params: { categoryId: string } }) {
+  const { data: session } = useSession();
 
   return (
-    <SharedStateProvider initWordSets={wordSets}>
+    <SharedStateProvider categoryId={params.categoryId}>
       <div className="min-h-screen">
         <div className="container mx-auto p-4 xl:px-60">
           <div className="flex flex-col gap-4">
@@ -48,7 +28,6 @@ export default async function Page({
 
           <header className="mb-8 text-center">
             <h1 className="text-4xl font-bold text-white mb-2 mt-10">
-              {data.category}
             </h1>
             <p className="text-xl"></p>
           </header>

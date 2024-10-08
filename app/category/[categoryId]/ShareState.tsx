@@ -32,14 +32,42 @@ const SharedStateContext = createContext<SharedState | undefined>(undefined);
 // Props type for the provider component
 interface SharedStateProviderProps {
   children: ReactNode;
-  initWordSets: WordSet[];
+  categoryId: string;
 }
 
 export function SharedStateProvider({
   children,
-  initWordSets,
+  categoryId,
 }: SharedStateProviderProps) {
-  const [wordSets, setWordSets] = useState<WordSet[]>(initWordSets);
+  const [wordSets, setWordSets] = useState<WordSet[]>([
+    { _id: "", name: "", words: [""] },
+  ]);
+
+  useEffect(() => {
+    const fetchWordSets = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.BASEURL}/api/categories/${categoryId}/wordset`,
+          {
+            cache: "no-cache",
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch word sets");
+        }
+
+        const data = (await response.json()) as ICategory;
+        setWordSets(data.wordSet); // Store word sets in state
+      } catch (err) {
+        console.error("Error fetching word sets:", err);
+      }
+    };
+
+    fetchWordSets();
+  }, [categoryId]);
 
   return (
     <SharedStateContext.Provider value={{ wordSets, setWordSets }}>

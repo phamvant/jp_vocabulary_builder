@@ -17,6 +17,7 @@ import {
 import { useSharedState } from "./ShareState";
 import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function WordSetRegion({ categoryId }: { categoryId: string }) {
   const { wordSets, setWordSets } = useSharedState();
@@ -43,7 +44,7 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
             "Content-Type": "application/json",
           },
           credentials: "include",
-        },
+        }
       );
 
       if (!response.ok) throw new Error("Failed to delete category");
@@ -75,7 +76,7 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
           className="cursor-pointer hover:bg-white/10"
           onClick={(e) => {
             const isDeleteButton = (e.target as HTMLElement).closest(
-              ".text-red-500",
+              ".text-red-500"
             );
             if (!isDeleteButton) {
               navigateToWordSet(wordSet._id, idx);
@@ -86,11 +87,15 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
             <CardTitle className="text-xl font-bold">{wordSet.name}</CardTitle>
 
             <div className="flex gap-4">
-              <a href={`/category/${categoryId}/wordset/${wordSet._id}/edit`}>
-                <Button variant="ghost" size="sm" className="text-white w-8 p-0 rounded-full">
+              <Link prefetch={true} href={`/category/${categoryId}/wordset/${wordSet._id}/edit`}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white w-8 p-0 rounded-full"
+                >
                   <Pencil className="size-4" />
                 </Button>
-              </a>
+              </Link>
 
               <AlertDialog>
                 <AlertDialogTrigger asChild>
