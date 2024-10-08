@@ -1,13 +1,15 @@
 import QuizCard from "./QuizCard";
 
-
 export default async function Quiz({
   params,
 }: {
   params: { categoryId: string; wordsetId: string };
 }) {
+  const url = `/api/categories/${params.categoryId}/wordset/${params.wordsetId}`;
 
   return (
-      <QuizCard categoryId={params.categoryId} wordsetId={params.wordsetId} showSave={true} />
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <QuizCard url={url} showSave={true} />
+    </div>
   );
 }

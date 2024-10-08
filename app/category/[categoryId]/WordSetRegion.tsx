@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, RotateCwIcon, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,7 +44,7 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
             "Content-Type": "application/json",
           },
           credentials: "include",
-        }
+        },
       );
 
       if (!response.ok) throw new Error("Failed to delete category");
@@ -68,6 +68,14 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
     }
   };
 
+  if (wordSets[0]._id == "") {
+    return (
+      <div className="w-full flex justify-center">
+        <RotateCwIcon className="animate-spin text-white" />
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rounded-2xl">
       {wordSets.map((wordSet, idx) => (
@@ -76,7 +84,7 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
           className="cursor-pointer hover:bg-white/10"
           onClick={(e) => {
             const isDeleteButton = (e.target as HTMLElement).closest(
-              ".text-red-500"
+              ".text-red-500",
             );
             if (!isDeleteButton) {
               navigateToWordSet(wordSet._id, idx);
@@ -87,7 +95,10 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
             <CardTitle className="text-xl font-bold">{wordSet.name}</CardTitle>
 
             <div className="flex gap-4">
-              <Link prefetch={true} href={`/category/${categoryId}/wordset/${wordSet._id}/edit`}>
+              <Link
+                href={`/category/${categoryId}/wordset/${wordSet._id}/edit`}
+                prefetch={true}
+              >
                 <Button
                   variant="ghost"
                   size="sm"

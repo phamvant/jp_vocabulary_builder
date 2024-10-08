@@ -46,20 +46,18 @@ export function SharedStateProvider({
   useEffect(() => {
     const fetchWordSets = async () => {
       try {
-        const response = await fetch(
-          `${process.env.BASEURL}/api/categories/${categoryId}/wordset`,
-          {
-            cache: "no-cache",
-            method: "GET",
-            credentials: "include",
-          }
-        );
+        const response = await fetch(`/api/categories/${categoryId}/wordset`, {
+          cache: "no-cache",
+          method: "GET",
+          credentials: "include",
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch word sets");
         }
 
         const data = (await response.json()) as ICategory;
+        console.log(data);
         setWordSets(data.wordSet); // Store word sets in state
       } catch (err) {
         console.error("Error fetching word sets:", err);

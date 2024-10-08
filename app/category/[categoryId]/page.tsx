@@ -1,14 +1,16 @@
-"use client";
-
 import AuthButtons from "@/components/AuthButton";
-import { ICategory, SharedStateProvider } from "./ShareState";
+import { SharedStateProvider } from "./ShareState";
 import SubmitForm from "./SubmitForm";
 import WordSetRegion from "./WordSetRegion";
+import { getServerSession } from "next-auth";
 import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
 
-export default function Page({ params }: { params: { categoryId: string } }) {
-  const { data: session } = useSession();
+export default async function Page({
+  params,
+}: {
+  params: { categoryId: string };
+}) {
+  const session = await getServerSession();
 
   return (
     <SharedStateProvider categoryId={params.categoryId}>
@@ -28,6 +30,7 @@ export default function Page({ params }: { params: { categoryId: string } }) {
 
           <header className="mb-8 text-center">
             <h1 className="text-4xl font-bold text-white mb-2 mt-10">
+              {/* {data.category} */}
             </h1>
             <p className="text-xl"></p>
           </header>
