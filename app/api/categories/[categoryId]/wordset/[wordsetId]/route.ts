@@ -6,9 +6,17 @@ import { ObjectId } from "mongodb";
 import { getSentences } from "./mazii";
 import { WordsSchema } from "../route";
 
+function shuffleArray(array: string[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { categoryId: string; wordsetId: string } },
+  { params }: { params: { categoryId: string; wordsetId: string } }
 ) {
   const session = await getServerSession(authOptions);
 
@@ -29,7 +37,7 @@ export async function GET(
     }
 
     const wordSet = categoryExists.wordSet.filter((set: any) =>
-      set._id.equals(new ObjectId(params.wordsetId)),
+      set._id.equals(new ObjectId(params.wordsetId))
     );
 
     if (!wordSet.length) {
@@ -40,7 +48,8 @@ export async function GET(
     if (wordonly) {
       ret = wordSet[0].words;
     } else {
-      ret = await getSentences({ str: wordSet[0].words });
+      const shuffledArr = shuffleArray(wordSet[0].words);
+      ret = await getSentences(shuffledArr);
     }
 
     return NextResponse.json({
@@ -55,7 +64,7 @@ export async function GET(
 
 export async function POST(
   request: Request,
-  { params }: { params: { categoryId: string; wordsetId: string } },
+  { params }: { params: { categoryId: string; wordsetId: string } }
 ) {
   const { newWords } = await request.json();
 
@@ -78,7 +87,7 @@ export async function POST(
       }, // Filter to find the document
       {
         $set: { "wordSet.$.words": newWords },
-      },
+      }
     );
 
     if (!result.modifiedCount) {
@@ -93,7 +102,7 @@ export async function POST(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { categoryId: string; wordsetId: string } },
+  { params }: { params: { categoryId: string; wordsetId: string } }
 ) {
   const session = await getServerSession(authOptions);
 
@@ -114,7 +123,7 @@ export async function DELETE(
       },
       {
         $pull: { wordSet: { _id: new ObjectId(params.wordsetId) } },
-      },
+      }
     );
 
     if (result.modifiedCount === 0) {

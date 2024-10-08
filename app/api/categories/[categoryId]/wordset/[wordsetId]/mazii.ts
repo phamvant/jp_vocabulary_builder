@@ -17,12 +17,12 @@ const getAllData = (words: string[]): Promise<any>[] => {
         data.word = word;
         return data;
       })
-      .catch((err) => err),
+      .catch((err) => err)
   );
 };
 
-export async function getSentences({ str }: { str: string[] }) {
-  const sentences = await Promise.allSettled(getAllData(str));
+export async function getSentences(words: string[]) {
+  const sentences = await Promise.allSettled(getAllData(words));
 
   const data = sentences.reduce((acc: any[], cur) => {
     if (cur.status === "fulfilled" && cur.value && cur.value.results.length) {
