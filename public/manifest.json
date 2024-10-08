@@ -1,8 +1,8 @@
 {
   "name": "マイ漢字",
   "short_name": "漢字",
-  "theme_color": "#1d4556",
-  "background_color": "#1d4556",
+  "theme_color": "#0e222a",
+  "background_color": "#0e222a",
   "display": "standalone",
   "orientation": "any",
   "scope": "https://kanjistudy.vercel.app/",

@@ -72,7 +72,7 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
       {wordSets.map((wordSet, idx) => (
         <Card
           key={wordSet._id}
-          className="cursor-pointer"
+          className="cursor-pointer hover:bg-white/10"
           onClick={(e) => {
             const isDeleteButton = (e.target as HTMLElement).closest(
               ".text-red-500",

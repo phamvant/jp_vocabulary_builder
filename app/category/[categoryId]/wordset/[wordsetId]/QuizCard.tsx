@@ -135,7 +135,7 @@ export default function QuizCard({
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl h-2/3 hover:bg-transparent">
+      <Card className="w-full max-w-2xl h-2/3 backdrop-blur-xl">
         <CardContent className="p-6">
           <div className="text-2xl font-bold text-center mb-8">
             <div className="flex justify-between items-center">

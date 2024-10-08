@@ -144,7 +144,7 @@ export default function Form({
                 }
               }}
             >
-              <Card className="shadow-lg hover:shadow-xl cursor-pointer">
+              <Card className="shadow-lg hover:bg-white/10 cursor-pointer">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0">
                   <CardTitle className="text-xl font-bold">
                     {category.category}
