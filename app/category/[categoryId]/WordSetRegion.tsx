@@ -86,7 +86,12 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
             const isDeleteButton = (e.target as HTMLElement).closest(
               ".text-red-500",
             );
-            if (!isDeleteButton) {
+
+            const isEdit = (e.target as HTMLElement).closest(
+              ".pencil",
+            );
+
+            if (!isDeleteButton && !isEdit) {
               navigateToWordSet(wordSet._id, idx);
             }
           }}
@@ -102,7 +107,7 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-white w-8 p-0 rounded-full"
+                  className="text-white w-8 p-0 rounded-full pencil"
                 >
                   <Pencil className="size-4" />
                 </Button>

@@ -46,7 +46,7 @@ export async function POST(request: Request) {
               word,
             },
           },
-        },
+        }
       );
 
       if (!result.modifiedCount) {
@@ -94,12 +94,15 @@ export async function GET() {
       throw new Error();
     }
 
-    return NextResponse.json(existingSave.sentences, { status: 200 });
+    return NextResponse.json(
+      { words: existingSave.sentences },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error retrieving sentences:", error);
     return NextResponse.json(
       { error: "Failed to retrieve sentences" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -123,25 +126,25 @@ export async function DELETE(request: Request) {
         $pull: {
           sentences: { _id: new ObjectId(sentenceId) },
         },
-      },
+      }
     );
 
     if (result.modifiedCount === 0) {
       return NextResponse.json(
         { error: "Sentence not found or already deleted" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
     return NextResponse.json(
       { message: "Sentence deleted successfully" },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.error("Error deleting sentence:", error);
     return NextResponse.json(
       { error: "Failed to delete sentence" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

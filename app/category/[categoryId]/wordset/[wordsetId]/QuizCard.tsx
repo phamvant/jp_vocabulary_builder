@@ -75,10 +75,9 @@ export default function QuizCard({
         if (!response.ok) throw new Error("Failed to fetch words");
 
         const data = await response.json();
-
-        console.log(data.words);
+        
         setSentences(
-          data.words.map((word: ISentence) => ({ ...word, isSaved: false })),
+          data.words.map((word: ISentence) => ({ ...word, isSaved: false }))
         );
         setName(data.name);
       } catch (error) {
@@ -109,8 +108,8 @@ export default function QuizCard({
 
     setSentences((prev) =>
       prev.map((sentence, i) =>
-        i === idx ? { ...sentence, isSaved: true } : sentence,
-      ),
+        i === idx ? { ...sentence, isSaved: true } : sentence
+      )
     );
 
     try {
@@ -127,8 +126,8 @@ export default function QuizCard({
     } catch (error) {
       setSentences((prev) =>
         prev.map((sentence, i) =>
-          i === idx ? { ...sentence, isSaved: false } : sentence,
-        ),
+          i === idx ? { ...sentence, isSaved: false } : sentence
+        )
       );
 
       toast({
