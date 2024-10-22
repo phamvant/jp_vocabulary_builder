@@ -42,12 +42,14 @@ export default function WordBox({
   };
 
   const handleDelete = () => {
+    /*
     if (wordSet.isPublic) {
       toast({
         title: "公共セットを変更できない",
       });
       return;
     }
+    */
 
     if (deleteIndex !== null) {
       setWords(words.filter((_, i) => i !== deleteIndex));
@@ -68,10 +70,12 @@ export default function WordBox({
 
   const handleSave = async () => {
     if (wordSet.isPublic) {
+      /*
       toast({
         title: "公共セットを変更できない",
       });
       return;
+      */
     }
     try {
       const response = await fetch(

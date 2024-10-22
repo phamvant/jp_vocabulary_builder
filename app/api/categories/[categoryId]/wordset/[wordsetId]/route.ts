@@ -80,7 +80,6 @@ export async function POST(
 
     const result = await collection.updateOne(
       {
-        isPublic: false,
         _id: new ObjectId(params.categoryId),
         userId: session.user.id,
         "wordSet._id": new ObjectId(params.wordsetId),
