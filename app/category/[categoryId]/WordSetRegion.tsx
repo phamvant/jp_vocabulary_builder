@@ -79,7 +79,7 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rounded-2xl">
       {wordSets.map((wordSet, idx) => (
-	<Link href={`/category/${categoryId}/wordset/${wordSet._id}`} >
+	<Link href={`/category/${categoryId}/wordset/${wordSet._id}`} prefetch={true} >
         <Card
           key={wordSet._id}
           className="cursor-pointer hover:bg-white/10"
