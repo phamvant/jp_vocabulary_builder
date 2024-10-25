@@ -1,6 +1,8 @@
+"use client"
+
 import QuizCard from "./QuizCard";
 
-export default async function Quiz({
+export default function Quiz({
   params,
 }: {
   params: { categoryId: string; wordsetId: string };

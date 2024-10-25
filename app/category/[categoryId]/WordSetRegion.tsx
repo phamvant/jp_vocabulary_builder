@@ -58,14 +58,14 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
   };
 
   const navigateToWordSet = (wordSetId: string, idx: number) => {
-    console.log(wordSets[idx]);
-    if (wordSets[idx].words.length) {
-      window.location.href = `/category/${categoryId}/wordset/${wordSetId}`;
-    } else {
+    // console.log(wordSets[idx]);
+    // if (wordSets[idx].words.length) {
+    //   window.location.href = `/category/${categoryId}/wordset/${wordSetId}`;
+    // } else {
       toast({
         title: "文字なし",
       });
-    }
+    // }
   };
 
   if (wordSets[0]._id == "") {
@@ -79,22 +79,23 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rounded-2xl">
       {wordSets.map((wordSet, idx) => (
+	<Link href={`/category/${categoryId}/wordset/${wordSet._id}`} >
         <Card
           key={wordSet._id}
           className="cursor-pointer hover:bg-white/10"
-          onClick={(e) => {
-            const isDeleteButton = (e.target as HTMLElement).closest(
-              ".text-red-500",
-            );
+          // onClick={(e) => {
+          //   const isDeleteButton = (e.target as HTMLElement).closest(
+          //     ".text-red-500",
+          //   );
 
-            const isEdit = (e.target as HTMLElement).closest(
-              ".pencil",
-            );
+          //   const isEdit = (e.target as HTMLElement).closest(
+          //     ".pencil",
+          //   );
 
-            if (!isDeleteButton && !isEdit) {
-              navigateToWordSet(wordSet._id, idx);
-            }
-          }}
+          //   if (!isDeleteButton && !isEdit) {
+          //     navigateToWordSet(wordSet._id, idx);
+          //   }
+          // }}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle className="text-xl font-bold">{wordSet.name}</CardTitle>
@@ -102,7 +103,6 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
             <div className="flex gap-4">
               <Link
                 href={`/category/${categoryId}/wordset/${wordSet._id}/edit`}
-                prefetch={true}
               >
                 <Button
                   variant="ghost"
@@ -168,6 +168,7 @@ export default function WordSetRegion({ categoryId }: { categoryId: string }) {
             )}
           </CardContent>
         </Card>
+	</Link>
       ))}
     </div>
   );

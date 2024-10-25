@@ -1,23 +1,26 @@
+"use client"
+
 import AuthButtons from "@/components/AuthButton";
 import { SharedStateProvider } from "./ShareState";
 import SubmitForm from "./SubmitForm";
 import WordSetRegion from "./WordSetRegion";
-import { getServerSession } from "next-auth";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
 
-export default async function Page({
+export default function Page({
   params,
 }: {
   params: { categoryId: string };
 }) {
-  const session = await getServerSession();
+
+  const { data: session } = useSession();
 
   return (
     <SharedStateProvider categoryId={params.categoryId}>
       <div className="min-h-screen">
         <div className="container mx-auto p-4 xl:px-60">
           <div className="flex flex-col gap-4">
-            <AuthButtons session={session} />
+            <AuthButtons />
             {session ? (
               <a href="/saved">
                 <Button className="bg-pink-400/80 hover:bg-pink-400">

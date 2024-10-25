@@ -4,9 +4,10 @@
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "./ui/button";
-import { Session } from "next-auth";
 
-const AuthButtons = ({ session }: { session: Session | null }) => {
+const AuthButtons = () => {
+  const { data: session } = useSession();
+
   return (
     <div>
       {!session ? (

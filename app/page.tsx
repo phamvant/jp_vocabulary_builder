@@ -30,7 +30,7 @@ export default async function JapaneseVocabSaaS() {
     <div className="min-h-screen bg-gradient-to-b">
       <div className="container mx-auto p-4 xl:px-60">
         <div className="flex flex-col gap-4">
-          <AuthButtons session={session} />
+          <AuthButtons />
           {session ? (
             <a href="/saved">
               <Button className="bg-pink-400/80 hover:bg-pink-400">
