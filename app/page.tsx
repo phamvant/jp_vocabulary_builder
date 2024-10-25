@@ -1,14 +1,13 @@
-"use client"
+"use client";
 
 import AuthButtons from "@/components/AuthButton";
 import Form from "@/components/Form";
 import { Button } from "@/components/ui/button";
-import { getSession } from "next-auth/react";
-import { headers } from "next/headers";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function JapaneseVocabSaaS() {
-  const { data: session } = getSession();
+  const { data: session } = useSession();
   const [categories, setCategories] = useState<any>();
 
   useEffect(() => {
@@ -17,7 +16,7 @@ export default function JapaneseVocabSaaS() {
         const response = await fetch(`/api/categories`, {
           cache: "no-cache",
           method: "GET",
-          credentials: "include"
+          credentials: "include",
         });
 
         if (!response.ok) throw new Error("Failed to fetch words");
@@ -25,10 +24,7 @@ export default function JapaneseVocabSaaS() {
         const data = await response.json();
 
         setCategories(data);
-
-      } catch (error) {
-      }
-
+      } catch (error) {}
     };
     fetchWords();
   }, []);
