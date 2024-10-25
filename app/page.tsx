@@ -1,30 +1,37 @@
+"use client"
+
 import AuthButtons from "@/components/AuthButton";
 import Form from "@/components/Form";
 import { Button } from "@/components/ui/button";
-import { getServerSession } from "next-auth";
+import { getSession } from "next-auth/react";
 import { headers } from "next/headers";
+import { useEffect, useState } from "react";
 
-export default async function JapaneseVocabSaaS() {
-  const session = await getServerSession();
+export default function JapaneseVocabSaaS() {
+  const { data: session } = getSession();
+  const [categories, setCategories] = useState<any>();
 
-  const fetchWords = async () => {
-    try {
-      const response = await fetch(`${process.env.BASEURL}/api/categories`, {
-        cache: "no-cache",
-        headers: new Headers(headers()),
-      });
+  useEffect(() => {
+    const fetchWords = async () => {
+      try {
+        const response = await fetch(`/api/categories`, {
+          cache: "no-cache",
+          method: "GET",
+          credentials: "include"
+        });
 
-      if (!response.ok) throw new Error("Failed to fetch words");
+        if (!response.ok) throw new Error("Failed to fetch words");
 
-      const data = await response.json();
+        const data = await response.json();
 
-      return data;
-    } catch (error) {
-      return [""];
-    }
-  };
+        setCategories(data);
 
-  const categories = await fetchWords();
+      } catch (error) {
+      }
+
+    };
+    fetchWords();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b">

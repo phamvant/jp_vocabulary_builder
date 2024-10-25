@@ -28,6 +28,10 @@ export default function Form({
   const { data: session } = useSession();
   const { toast } = useToast();
 
+  useEffect(() => {
+    setCategories(inCategories);
+  }, [inCategories]);
+
   const [categories, setCategories] =
     useState<{ category: string; _id: string; createdDate: string }[]>(
       inCategories
@@ -127,7 +131,7 @@ export default function Form({
           </div>
         </form>
       </div>
-
+      { !categories ? <></> :
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rounded-2xl">
         {categories.map((category) => (
           <div key={category._id}>
@@ -192,7 +196,7 @@ export default function Form({
             </Link>
           </div>
         ))}
-      </div>
+      </div>}
     </div>
   );
 }
