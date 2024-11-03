@@ -57,7 +57,6 @@ export function SharedStateProvider({
         }
 
         const data = (await response.json()) as ICategory;
-        console.log(data);
         setWordSets(data.wordSet); // Store word sets in state
       } catch (err) {
         console.error("Error fetching word sets:", err);

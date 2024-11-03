@@ -33,6 +33,15 @@ export default function MaziiPopup({
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowUp") setOpen((prev) => !prev);
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>

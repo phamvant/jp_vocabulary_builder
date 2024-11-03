@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -75,9 +75,9 @@ export default function QuizCard({
         if (!response.ok) throw new Error("Failed to fetch words");
 
         const data = await response.json();
-        
+
         setSentences(
-          data.words.map((word: ISentence) => ({ ...word, isSaved: false }))
+          data.words.map((word: ISentence) => ({ ...word, isSaved: false })),
         );
         setName(data.name);
       } catch (error) {
@@ -88,14 +88,19 @@ export default function QuizCard({
     fetchWords();
   }, []);
 
-  const handleNextQuestion = (isNext: boolean) => {
-    const nextQuestion = isNext ? currentSentence + 1 : currentSentence - 1;
-
-    if (nextQuestion < sentences!.length && nextQuestion >= 0) {
-      setCurrentSentence(nextQuestion);
-    }
-    setIsMean(false);
-  };
+  const handleNextQuestion = useCallback(
+    (isNext: boolean) => {
+      setCurrentSentence((prev) => {
+        const nextQuestion = isNext ? prev + 1 : prev - 1;
+        if (nextQuestion < sentences.length && nextQuestion >= 0) {
+          return nextQuestion;
+        }
+        return prev;
+      });
+      setIsMean(false);
+    },
+    [sentences.length],
+  );
 
   const handleSave = async (idx: number) => {
     if (!session) {
@@ -108,8 +113,8 @@ export default function QuizCard({
 
     setSentences((prev) =>
       prev.map((sentence, i) =>
-        i === idx ? { ...sentence, isSaved: true } : sentence
-      )
+        i === idx ? { ...sentence, isSaved: true } : sentence,
+      ),
     );
 
     try {
@@ -126,8 +131,8 @@ export default function QuizCard({
     } catch (error) {
       setSentences((prev) =>
         prev.map((sentence, i) =>
-          i === idx ? { ...sentence, isSaved: false } : sentence
-        )
+          i === idx ? { ...sentence, isSaved: false } : sentence,
+        ),
       );
 
       toast({
@@ -166,6 +171,17 @@ export default function QuizCard({
       });
     }
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") handleNextQuestion(true);
+      if (e.key === "ArrowLeft") handleNextQuestion(false);
+      if (e.key === "ArrowDown") setIsMean((prev) => !prev);
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleNextQuestion]);
 
   return (
     <Card className="w-full max-w-2xl h-2/3 backdrop-blur-xl">
